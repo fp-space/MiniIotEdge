@@ -1,54 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
+
+    <!-- 父模块信息 -->
     <groupId>com.iothhub</groupId>
     <artifactId>MiniIotEdge</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>MiniIotEdge</name>
-    <description>MiniIotEdge</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+    <version>${project.version}</version>
+    <packaging>pom</packaging>
+
+    <!-- 子模块 -->
+    <modules>
+        <module>device-connector</module>
+        <module>iot-core</module>
+    </modules>
+
+    <!-- 全局属性配置 -->
     <properties>
-        <java.version>21</java.version>
+        <project.version>v0.0.1-alpha</project.version>
+        <java.version>21</java.version> <!-- 全局设置 Java 版本 -->
+        <maven.compiler.source>21</maven.compiler.source> <!-- 编译 Java 版本 -->
+        <maven.compiler.target>21</maven.compiler.target> <!-- 编译 Java 版本 -->
+        <maven.compiler.version>3.8.1</maven.compiler.version> <!-- 编译 Java 版本 -->
+        <spring-boot.version>3.3.5</spring-boot.version> <!-- 编译 Java 版本 -->
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
+    <!-- 全局依赖管理 -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- 构建配置，所有子模块都会自动继承 -->
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.version}</version>
+                    <configuration>
+                        <source>${java.version}</source> <!-- 使用全局的 Java 版本 -->
+                        <target>${java.version}</target> <!-- 使用全局的 Java 版本 -->
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version> <!-- Spring Boot 插件版本 -->
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
     </build>
 
 </project>
