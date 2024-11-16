@@ -12,7 +12,7 @@
 
     <!-- 子模块 -->
     <modules>
-        <module>device-connector</module>
+        <module>iot-edge-connector</module>
         <module>iot-core</module>
     </modules>
 

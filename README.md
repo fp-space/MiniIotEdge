@@ -36,6 +36,7 @@ load-balancer-service：负载均衡服务模块，确保请求在不同节点�
 
 ## 目录
 
+```text
 ├── core-service                  # 核心服务模块
 │   ├── src/main/java/com/iothhub/core/
 │   └── src/main/resources/
@@ -63,3 +64,6 @@ load-balancer-service：负载均衡服务模块，确保请求在不同节点�
 ├── load-balancer-service        # 负载均衡服务
 │   ├── src/main/java/com/iothhub/loadbalancer/
 │   └── src/main/resources/
+
+```
+
