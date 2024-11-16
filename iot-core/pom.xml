@@ -6,8 +6,8 @@
 
 	<!-- 父 POM 配置 -->
 	<parent>
-		<groupId>com.iothhub</groupId>
-		<artifactId>MiniIotEdge</artifactId>
+		<groupId>com.iothhub.parent</groupId>
+		<artifactId>iot-parent</artifactId>
 		<version>v0.0.1-alpha</version>
 		<relativePath/>
 	</parent>
