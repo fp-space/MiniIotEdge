@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- 父 POM 配置 -->
+	<parent>
+		<groupId>com.iothhub.parent</groupId>
+		<artifactId>iot-parent</artifactId>
+		<version>v0.0.1-alpha</version>
+		<relativePath/>
+	</parent>
+
+	<properties>
+		<project.version>v0.0.1-alpha</project.version>
+		<iot-parent.version>v0.0.1-alpha</iot-parent.version>
+	</properties>
+
+	<groupId>com.device.connector</groupId>
+	<artifactId>iot-edge-connector</artifactId>
+	<version>v0.0.1-alpha</version>
+
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>data-forwarding-module</module>
+		<module>data-ingestion-module</module>
+		<module>device-connection-module</module>
+		<module>device-control-module</module>
+		<module>load-balancer-module</module>
+		<module>message-broker-module</module>
+		<module>protocol-adapter-module</module>
+	</modules>
+
+</project>
