@@ -13,42 +13,39 @@ import java.util.Objects;
 
 @Component
 @Slf4j
-public class MqttMessageHandler {
+public class MqttMessageReceiverHandler {
     
-    // 自动注入处理器 Map，键是 MessageType，值是对应的处理器
     private final Map<MessageType, IotMessageProcessor> processors;
     
-    public MqttMessageHandler(Map<MessageType, IotMessageProcessor> processors) {
+    public MqttMessageReceiverHandler(Map<MessageType, IotMessageProcessor> processors) {
         this.processors = processors;
     }
     
-    // 配置为接收从 mqttInputChannel 发送过来的消息
     @ServiceActivator(inputChannel = "mqttInputChannel")
     public void handleMessage(Message<?> message) {
-        // 获取消息的负载（payload），并转换为字符串
+        // 日志记录收到的消息内容和主题
         byte[] payload = (byte[]) message.getPayload();
-        String content = new String(payload);  // 将字节数组转换为字符串
+        String content = new String(payload);  // 如果负载是字符串
         String topic = message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC, String.class);
         
-        // 根据消息类型查找合适的处理器并执行
-        MessageType messageType = determineMessageType(Objects.requireNonNull(topic));
+        // 输出收到的消息和主题
+        log.info("Received message from topic: {} with payload: {}", topic, content);
+        
+        // 从消息头中提取 MessageType
+        String messageTypeHeader = message.getHeaders().get("MessageType", String.class);
+        MessageType messageType = MessageType.match(messageTypeHeader);
+        
+        log.info("MessageType extracted from header: {}", messageType);
+        
+        // 获取对应的处理器
         IotMessageProcessor processor = processors.get(messageType);
         
-        // 根据消息类型 - 事件回复 或者 正常的属性上报
-        if (processor != null) {
+        if (Objects.nonNull(processor)) {
+            log.info("Processing message with processor: {}", processor.getClass().getName());
             processor.process(topic, content);
         } else {
             log.error("No processor found for MessageType: {}", messageType);
         }
     }
-    
-    // 判断消息类型的逻辑
-    private MessageType determineMessageType(String topic) {
-        // 简化逻辑：您可以根据 topic 或 content 判断消息类型
-        if (topic.contains("event")) {
-            return MessageType.EVENT_REPLY;
-        } else {
-            return MessageType.ATTRIBUTE_REPORT;
-        }
-    }
+
 }

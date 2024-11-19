@@ -46,6 +46,11 @@
 			<artifactId>spring-integration-mqtt</artifactId>
 			<version>6.3.5</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.paho</groupId>
+			<artifactId>org.eclipse.paho.mqttv5.client</artifactId>
+			<version>1.2.5</version>
+		</dependency>
 		<!--配置文件报错问题-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -68,6 +73,11 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.32</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-mqtt</artifactId>
+			<version>6.3.5</version>
 		</dependency>
 
 	</dependencies>
