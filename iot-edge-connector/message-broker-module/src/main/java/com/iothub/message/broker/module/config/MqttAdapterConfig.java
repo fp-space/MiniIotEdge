@@ -1,6 +1,7 @@
 package com.iothub.message.broker.module.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.paho.mqttv5.client.MqttClient;
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -103,6 +104,10 @@ public class MqttAdapterConfig {
         messageHandler.setAsync(true);  // 设置异步发送
         messageHandler.setDefaultQos(mqttConfigProperties.qos());  // 设置默认QoS
         
+        // 使用 SmartMessageConverter 替换默认的消息转换器
+        SmartMessageConverter smartMessageConverter = new StringMessageConverter();
+        messageHandler.setConverter(smartMessageConverter);   // 设置消息转换器
+        
         return messageHandler;
     }
     
@@ -112,5 +117,21 @@ public class MqttAdapterConfig {
     @Bean
     public MessageChannel mqttOutputChannel() {
         return new DirectChannel();  // 直接通道
+    }
+    
+    
+    // 配置 MQTT 客户端连接信息
+    @Bean
+    public MqttClient mqttClient() throws Exception {
+        // 生成客户端ID，客户端ID应该唯一
+        String clientId = "mqtt-client-" + System.currentTimeMillis();
+        
+        // 创建 MqttClient 实例
+        MqttClient mqttClient = new MqttClient(mqttConfigProperties.brokerUrl(), clientId);
+        
+        // 连接到 MQTT Broker
+        mqttClient.connect(createMqttConnectionOptions());
+        
+        return mqttClient;
     }
 }

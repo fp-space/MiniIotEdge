@@ -9,6 +9,4 @@ spring:
     qos: 1  # 默认 QoS 质量服务级别
 #    input-output-channel-name: "mqttChannel"
     subscriptions:
-      - topic1
-      - topic2
-      - topic3
+      - /topic/#

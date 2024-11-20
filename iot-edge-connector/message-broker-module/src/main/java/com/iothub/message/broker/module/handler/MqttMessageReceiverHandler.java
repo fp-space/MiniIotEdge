@@ -3,6 +3,7 @@ package com.iothub.message.broker.module.handler;
 import com.iothub.message.broker.module.service.IotMessageProcessor;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.messaging.Message;
@@ -17,6 +18,10 @@ public class MqttMessageReceiverHandler {
     
     private final Map<MessageTypeEnum, IotMessageProcessor> processors;
     
+    @Autowired
+    private MqttMessageSenderHandler mqttMessageSenderHandler;
+    
+    
     public MqttMessageReceiverHandler(Map<MessageTypeEnum, IotMessageProcessor> processors) {
         this.processors = processors;
     }
@@ -29,7 +34,7 @@ public class MqttMessageReceiverHandler {
         String topic = message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC, String.class);
         
         // 输出收到的消息和主题
-        log.info("Received message from topic: {} with payload: {}", topic, content);
+        log.info("Received message from topic: {} with message: {}", topic, message);
         
         // 从消息头中提取 MessageType
         String messageTypeHeader = message.getHeaders().get("MessageType", String.class);
@@ -46,6 +51,7 @@ public class MqttMessageReceiverHandler {
         } else {
             log.error("No processor found for MessageType: {}", messageType);
         }
+        
     }
 
 }

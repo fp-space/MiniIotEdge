@@ -1,5 +1,6 @@
 package com.iothub.message.broker.module;
 
+import com.iothub.message.broker.module.enums.MessageTypeEnum;
 import com.iothub.message.broker.module.handler.MqttMessageSenderHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +19,8 @@ public class MessageBrokerTest {
     @Test
     public void testMqttSendMessage() {
         String content = "Hello, World!";
-        String topic = "/topic1";
-        mqttMessageSenderHandler.send(topic, content);
+        String topic = "/topic";
+        mqttMessageSenderHandler.sendMessageWithUserAttrs(topic, content, MessageTypeEnum.EVENT_REPLY);
     }
 }
 
