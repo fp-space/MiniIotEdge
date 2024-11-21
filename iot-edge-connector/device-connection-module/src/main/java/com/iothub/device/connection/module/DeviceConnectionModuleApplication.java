@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module;
+package com.iothub.device.connection.module;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
