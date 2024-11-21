@@ -1,30 +1,39 @@
 package com.iothub.message.broker.module.enums;
 
-import cn.hutool.core.util.StrUtil;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@AllArgsConstructor
 public enum MessageTypeEnum {
-    EVENT_REPLY("事件回复", "event"),    // 事件
-    ATTRIBUTE_REPORT("属性上报", "property"), // 属性
-    UNKNOWN("未知类型", null);         // 未知类型
     
-    @Getter
-    private final String desc;
+    EVENT_NOTIFICATION("事件通知", "event_notification"),    // 事件通知
+    PROPERTY_UPDATE("属性更新", "property_update"), // 属性更新
+    HEARTBEAT_MONITORING("心跳监控", "heartbeat_monitoring"), // 心跳监控
+    CONTROL_COMMAND("控制命令", "control_command"), // 控制命令
+    RESPONSE_TO_EVENT("事件响应", "response_to_event"), // 事件响应
+    UNSUPPORTED("不支持的类型", "unsupported");         // 不支持的类型
     
-    @Getter
+    private final String description;
     private final String type;
     
+    // 构造函数
+    MessageTypeEnum(String description, String type) {
+        this.description = description;
+        this.type = type;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public String getType() {
+        return type;
+    }
+    
     /**
-     * 根据传入的字符串匹配对应的 MessageType 枚举值。
+     * 根据传入的字符串类型匹配对应的 MessageType
      *
      * @param type 字符串类型
      * @return 匹配的 MessageType，若没有匹配则返回 null
      */
     public static MessageTypeEnum match(String type) {
-        
-        if(StrUtil.isBlank(type)){
+        if (type == null || type.trim().isEmpty()) {
             return null;
         }
         
@@ -33,7 +42,6 @@ public enum MessageTypeEnum {
                 return messageType;
             }
         }
-        return null;  // 若没有匹配的类型，可以返回 null 或抛出异常
+        return UNSUPPORTED;  // 若没有匹配的类型，可以返回 UNSUPPORTED 或其他适当的默认值
     }
 }
-

@@ -47,16 +47,6 @@ public class MqttMessageSenderHandler {
     }
     
     /**
-     * 发送带有默认消息类型的 MQTT 消息
-     *
-     * @param topic     MQTT 主题
-     * @param content   消息内容
-     */
-    public void sendMessage(String topic, String content) {
-        sendMessage(topic, content, MessageTypeEnum.UNKNOWN);
-    }
-    
-    /**
      * 发送带有用户自定义属性的 MQTT 消息
      *
      * @param topic     MQTT 主题

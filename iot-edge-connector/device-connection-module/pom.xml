@@ -12,9 +12,10 @@
 	</parent>
 	<properties>
 		<project.version>v0.0.1-alpha</project.version>
+		<message.version>v0.0.1-alpha</message.version>
 	</properties>
 
-	<groupId>com.iothub.module</groupId>
+	<groupId>com.iothub.device.connection.module</groupId>
 	<artifactId>device-connection-module</artifactId>
 	<version>${project.version}</version>
 
@@ -23,6 +24,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.iothub.module</groupId>
+			<artifactId>message-broker-module</artifactId>
+			<version>${message.version}</version>
 		</dependency>
 	</dependencies>
 
