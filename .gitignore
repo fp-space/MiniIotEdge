@@ -32,7 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 /mqtt-client-1732105101753/.lck
-/iot-edge-connector/message-broker-module/mqtt-client-1732291323749/.lck
-/iot-edge-connector/message-broker-module/mqtt-client-1732291382871/.lck
-/iot-edge-connector/message-broker-module/mqtt-client-1732291440891/.lck
-/iot-edge-connector/message-broker-module/mqtt-client-1732291526214/.lck
+/iot-edge-connector/message-broker-module/mqtt-client-*/.lck
