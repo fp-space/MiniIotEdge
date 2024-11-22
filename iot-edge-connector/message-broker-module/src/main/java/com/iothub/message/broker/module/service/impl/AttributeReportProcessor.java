@@ -18,7 +18,7 @@ public class AttributeReportProcessor implements IotMessageProcessor {
     
     @Override
     public MessageTypeEnum getMessageType() {
-        return MessageTypeEnum.ATTRIBUTE_REPORT;
+        return MessageTypeEnum.PROPERTY_UPDATE;
     }
 }
 

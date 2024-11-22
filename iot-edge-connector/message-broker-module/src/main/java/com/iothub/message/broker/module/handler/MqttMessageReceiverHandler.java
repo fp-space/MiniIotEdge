@@ -38,6 +38,7 @@ public class MqttMessageReceiverHandler {
         
         // 从消息头中提取 MessageType
         String messageTypeHeader = message.getHeaders().get("MessageType", String.class);
+        String messageSourceTypeHeader = message.getHeaders().get("MessageSourceType", String.class);
         MessageTypeEnum messageType = MessageTypeEnum.match(messageTypeHeader);
         
         log.info("MessageType extracted from header: {}", messageType);

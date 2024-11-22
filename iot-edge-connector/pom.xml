@@ -24,11 +24,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>data-forwarding-module</module>
-		<module>data-ingestion-module</module>
-		<module>device-connection-module</module>
-		<module>device-control-module</module>
-		<module>load-balancer-module</module>
 		<module>message-broker-module</module>
 		<module>protocol-adapter-module</module>
 	</modules>
