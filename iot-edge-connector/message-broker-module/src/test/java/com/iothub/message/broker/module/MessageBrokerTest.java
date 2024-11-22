@@ -20,7 +20,21 @@ public class MessageBrokerTest {
     public void testMqttSendMessage() {
         String content = "Hello, World!";
         String topic = "/topic";
-        mqttMessageSenderHandler.sendMessageWithUserAttrs(topic, content, MessageTypeEnum.EVENT_REPLY);
+        mqttMessageSenderHandler.sendMessageWithUserAttrs(topic, content, MessageTypeEnum.EVENT_NOTIFICATION);
+    }
+    
+    @Test
+    public void testConnector() {
+        String content = """
+                {
+                  "identify": "hello",
+                  "inputParams": {
+                    "a": "b"
+                  }
+                }
+                """;
+        String topic = "/topic";
+        mqttMessageSenderHandler.sendMessageWithUserAttrs(topic, content, MessageTypeEnum.CONTROL_COMMAND);
     }
 }
 

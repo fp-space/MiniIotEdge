@@ -3,7 +3,6 @@ package com.iothub.message.broker.module.handler;
 import com.iothub.message.broker.module.service.IotMessageProcessor;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.messaging.Message;
@@ -17,10 +16,6 @@ import java.util.Objects;
 public class MqttMessageReceiverHandler {
     
     private final Map<MessageTypeEnum, IotMessageProcessor> processors;
-    
-    @Autowired
-    private MqttMessageSenderHandler mqttMessageSenderHandler;
-    
     
     public MqttMessageReceiverHandler(Map<MessageTypeEnum, IotMessageProcessor> processors) {
         this.processors = processors;
