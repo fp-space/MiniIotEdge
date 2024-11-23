@@ -42,6 +42,6 @@ public enum MessageTypeEnum {
                 return messageType;
             }
         }
-        return UNSUPPORTED;  // 若没有匹配的类型，可以返回 UNSUPPORTED 或其他适当的默认值
+        return UNSUPPORTED;  // 若没有匹配的类型，可以返回 UNSUPPORTED 或其他适当地默认值
     }
 }
