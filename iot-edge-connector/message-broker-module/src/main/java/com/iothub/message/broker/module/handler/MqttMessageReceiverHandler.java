@@ -54,7 +54,7 @@ public class MqttMessageReceiverHandler {
                         log.debug("No messages in queue within the timeout period.");
                     }
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // 恢复中断状态
+                    Thread.currentThread().interrupt();
                     log.error("Message processing thread was interrupted", e);
                 } catch (Exception e) {
                     log.error("Unexpected error in message processing", e);

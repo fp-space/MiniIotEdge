@@ -1,36 +1,42 @@
 package com.iothub.message.broker.module.aspects;
 
-import cn.hutool.core.date.StopWatch;
-import org.aspectj.lang.annotation.After;
+import com.iothub.message.broker.module.utils.TimerUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
+@Slf4j
 @Aspect
 @Component
 public class TimedAspect {
     
-    // 初始化 StopWatch 实例
-    // 使用 ThreadLocal 保证每个线程有自己独立的计时器实例
-    private static final ThreadLocal<StopWatch> stopWatchThreadLocal = ThreadLocal.withInitial(StopWatch::new);
-    
-    @Pointcut("@annotation(com.iothub.message.broker.module.annotations.Timed)")  // 指定哪些方法要切入
-    public void timedMethods() {}
-    
-    @Before("timedMethods()")  // 在方法执行前开始计时
-    public void startTimer() {
-        StopWatch stopWatch = new StopWatch();  // 每次开始时创建新的 StopWatch 实例
-        stopWatchThreadLocal.set(stopWatch);    // 将其放入 ThreadLocal 中，确保每个线程都有独立实例
-        stopWatch.start();  // 开始计时
+    // 定义切点，指定注解 @Timed 的方法
+    @Pointcut("@annotation(com.iothub.message.broker.module.annotations.Timed)")
+    public void timedMethods() {
     }
     
-    @After("timedMethods()")  // 在方法执行后结束计时
-    public void stopTimer() {
-        StopWatch stopWatch = stopWatchThreadLocal.get();  // 获取当前线程的 StopWatch 实例
-        stopWatch.stop();  // 停止计时
-        double time = stopWatch.getTotalTimeSeconds();  // 获取总耗时（秒）
-        System.out.println("Method executed in: " + time + " seconds");
-        stopWatchThreadLocal.remove();
+    // 环绕通知：记录方法执行时间
+    @Around("timedMethods()")
+    public Object timeMethodExecution(ProceedingJoinPoint joinPoint) throws Throwable {
+        String tag = UUID.randomUUID().toString();  // 为每个方法调用生成唯一标识符
+        try {
+            TimerUtil.startTimer(tag);  // 开始计时
+            
+            // 执行目标方法
+            return joinPoint.proceed();
+        } catch (Throwable throwable) {
+            // 处理异常
+            log.error("Exception occurred in method: {}. Error: {}", joinPoint.getSignature().getName(), throwable.getMessage(), throwable);
+            throw throwable;  // 抛出异常，保证方法抛出原有异常
+        } finally {
+            TimerUtil.stopTimer(tag);  // 停止计时并记录
+        }
     }
+    
 }
+
