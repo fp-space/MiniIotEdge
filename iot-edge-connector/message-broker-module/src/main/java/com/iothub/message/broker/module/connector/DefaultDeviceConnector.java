@@ -14,17 +14,10 @@ import java.util.Map;
 public abstract class DefaultDeviceConnector implements DeviceConnector {
     private DeviceStatus cachedStatus; // 缓存设备状态，减少频繁获取的开销
     
-    private Device device;
+    // 使用 ThreadLocal 来保证每个虚拟线程拥有独立的 Device 实例
+    private static final ThreadLocal<Device> deviceThreadLocal = new ThreadLocal<>();
     
     public DefaultDeviceConnector() {}
-    
-    /**
-     * 如果需要，可以通过此方法手动设置 Device 对象。
-     */
-    public void setDevice(Device device) {
-        this.device = device;
-        log.info("Device has been set for {}", getTag());
-    }
     
     /**
      * 执行控制命令，模板方法
@@ -168,6 +161,14 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
     }
     
     public Device getDevice() {
-        return device;
+        return deviceThreadLocal.get();
+    }
+    
+    public void setDevice(Device device) {
+        deviceThreadLocal.set(device);
+    }
+    
+    public void clearDevice() {
+        deviceThreadLocal.remove();
     }
 }

@@ -28,8 +28,9 @@ public class ControlCommandProcessor implements IotMessageProcessor {
         Device device = getDevice();
         
         DefaultDeviceConnector connector = initConnector(device);
-        
         doExecute(content, connector);
+        
+        connector.clearDevice();
     }
     
     private static Device getDevice() {
