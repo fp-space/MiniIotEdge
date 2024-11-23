@@ -3,10 +3,12 @@ package com.iothub.message.broker.module.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.Map;
 
 @Data
+@Accessors(fluent = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageRequest {

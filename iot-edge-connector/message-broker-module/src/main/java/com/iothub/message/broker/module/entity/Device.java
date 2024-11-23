@@ -1,12 +1,11 @@
 package com.iothub.message.broker.module.entity;
 
-import lombok.*;
-
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-@Getter
-@Setter
+@Data
 @Accessors(fluent = true)
 @AllArgsConstructor
 @NoArgsConstructor
