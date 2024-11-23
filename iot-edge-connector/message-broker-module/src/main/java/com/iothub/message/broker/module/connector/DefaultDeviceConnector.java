@@ -2,6 +2,7 @@ package com.iothub.message.broker.module.connector;
 
 import com.iothub.message.broker.module.entity.Device;
 import com.iothub.message.broker.module.entity.DeviceStatus;
+import com.iothub.message.broker.module.entity.MessageRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -21,11 +22,12 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
     
     /**
      * 执行控制命令，模板方法
-     * @param identify 命令
-     * @param params 参数
+     * @param request 输入参数
      */
     @Override
-    public final void exec(String identify, Map<String, Object> params) {
+    public final void exec(MessageRequest request) {
+        String identify = request.getIdentify();
+        Map<String, Object> params = request.getInputParams();
         log.info("Executing identify: identify={}, params={}", identify, params);
         
         try {
@@ -133,6 +135,12 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
      * @param payload 事件内容
      */
     public abstract void doReportEvent(String event, Map<String, Object> payload);
+    
+    /**
+     * 连接器标识符
+     * @return 唯一标识符
+     */
+    public abstract String getIdentify();
     
     /**
      * 处理命令执行后的结果

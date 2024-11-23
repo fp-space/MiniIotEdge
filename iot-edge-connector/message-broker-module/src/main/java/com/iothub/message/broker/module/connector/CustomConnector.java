@@ -29,6 +29,11 @@ public class CustomConnector extends DefaultDeviceConnector {
     }
     
     @Override
+    public String getIdentify() {
+        return "custom";
+    }
+    
+    @Override
     public void handleExecError(String command, Exception e) {
     
     }

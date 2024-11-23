@@ -27,5 +27,4 @@ public class CustomMqttv5PahoMessageDrivenChannelAdapter extends Mqttv5PahoMessa
         super.connectComplete(reconnect, serverURI);
     }
     
-    
 }
