@@ -67,13 +67,13 @@ public class DeviceManager {
         
         // 使用全参构造器，设置每个字段
         devices.add(new Device(1L, "device-001", "did-001", "Device 1", true, false,
-                "mfg-001", "product-001", "model-001", "2023-10-01"));
+                "mfg-001", "product-001", "custom", "2023-10-01"));
         
         devices.add(new Device(2L, "device-002", "did-002", "Device 2", false, true,
-                "mfg-002", "product-002", "model-002", "2023-10-02"));
+                "mfg-002", "product-002", "custom", "2023-10-02"));
         
         devices.add(new Device(3L, "device-003", "did-003", "Device 3", true, false,
-                "mfg-003", "product-003", "model-003", "2023-10-03"));
+                "mfg-003", "product-003", "custom", "2023-10-03"));
         
         return devices;
     }

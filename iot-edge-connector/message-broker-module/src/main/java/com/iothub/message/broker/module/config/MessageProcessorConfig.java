@@ -23,7 +23,11 @@ public class MessageProcessorConfig {
     @Bean
     public Map<String, String> identifyConnectorMap(List<DefaultDeviceConnector> connectorList) {
         Map<String, String> identifyMap = new HashMap<>();
-        connectorList.forEach(connector -> identifyMap.put(connector.getIdentify(), connector.getTag()));
+        connectorList.forEach(connector -> {
+            String tag = connector.getTag();
+            tag = tag.substring(0, 1).toLowerCase() + tag.substring(1);
+            identifyMap.put(connector.getIdentify(), tag);
+        });
         return identifyMap;
     }
 }

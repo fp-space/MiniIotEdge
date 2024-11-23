@@ -77,9 +77,8 @@ public class ControlCommandProcessor implements IotMessageProcessor {
     }
     
     private DefaultDeviceConnector initConnector(Device device) {
-        String tag = CustomConnector.class.getSimpleName();  // 获取 "CustomConnector"
-        tag = tag.substring(0, 1).toLowerCase() + tag.substring(1);  // 将首字母转换为小写，结果是 "customConnector"
-        DefaultDeviceConnector connector = deviceConnectorManager.getConnectorByTag(tag);
+        String identify = device.model();
+        DefaultDeviceConnector connector = deviceConnectorManager.getConnectorByIdentify(identify);
         connector.setDevice(device);
         return connector;
     }
