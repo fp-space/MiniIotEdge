@@ -1,5 +1,6 @@
 package com.iothub.message.broker.module.config;
 
+import com.iothub.message.broker.module.connector.DefaultDeviceConnector;
 import com.iothub.message.broker.module.service.IotMessageProcessor;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
 import org.springframework.context.annotation.Bean;
@@ -17,5 +18,12 @@ public class MessageProcessorConfig {
         Map<MessageTypeEnum, IotMessageProcessor> processors = new HashMap<>();
         iotMessageProcessorList.forEach(iotMessageProcessor -> processors.put(iotMessageProcessor.getMessageType(), iotMessageProcessor));
         return processors;
+    }
+    
+    @Bean
+    public Map<String, String> identifyConnectorMap(List<DefaultDeviceConnector> connectorList) {
+        Map<String, String> identifyMap = new HashMap<>();
+        connectorList.forEach(connector -> identifyMap.put(connector.getIdentify(), connector.getTag()));
+        return identifyMap;
     }
 }
