@@ -54,7 +54,7 @@ public class ScheduledTaskManager {
     public void init() {
         // 延迟启动10秒钟后执行首次任务
         scheduler.scheduleWithFixedDelay(this::processPropertyReports, 0, PROPERTY_REPORT_INTERVAL, TimeUnit.MINUTES);
-        scheduler.scheduleWithFixedDelay(this::processEventReports, 0, EVENT_REPORT_INTERVAL, TimeUnit.MINUTES);
+        scheduler.scheduleWithFixedDelay(this::processEventReports, 0, EVENT_REPORT_INTERVAL, TimeUnit.SECONDS);
         log.info("Scheduled tasks have been successfully initialized and will start after a delay of 10 seconds.");
     }
     

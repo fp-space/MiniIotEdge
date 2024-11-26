@@ -2,11 +2,9 @@ package com.iothub.message.broker.module.handler;
 
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.paho.mqttv5.client.MqttClient;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.eclipse.paho.mqttv5.common.packet.UserProperty;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.mqtt.outbound.Mqttv5PahoMessageHandler;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.integration.support.MessageBuilder;
@@ -14,6 +12,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -25,14 +24,8 @@ import java.util.UUID;
 @Component
 public class MqttMessageSenderHandler {
     
-    private final Mqttv5PahoMessageHandler mqttMessageHandler;
-    private final MqttClient mqttClient;
-    
-    // 构造函数通过依赖注入获取 Mqttv5PahoMessageHandler 和 MqttClient
-    public MqttMessageSenderHandler(@Qualifier(value = "mqttOutbound") Mqttv5PahoMessageHandler mqttMessageHandler, MqttClient mqttClient) {
-        this.mqttMessageHandler = mqttMessageHandler;
-        this.mqttClient = mqttClient;
-    }
+    @Resource
+    private Mqttv5PahoMessageHandler mqttv5PahoMessageHandler;
     
     /**
      * 发送带有指定消息类型的 MQTT 消息
@@ -41,21 +34,9 @@ public class MqttMessageSenderHandler {
      * @param content   消息内容
      * @param messageType 消息类型
      */
-    public void sendMessage(String topic, String content, @NonNull MessageTypeEnum messageType) {
-        Message<String> message = createMessage(topic, content, messageType);
+    public void publish(String topic, String content, @NonNull MessageTypeEnum messageType) {
+        Message<MqttMessage> message = createMessage(topic, content, messageType);
         sendUsingMessageHandler(message, topic);
-    }
-    
-    /**
-     * 发送带有用户自定义属性的 MQTT 消息
-     *
-     * @param topic     MQTT 主题
-     * @param content   消息内容
-     */
-    public void sendMessageWithUserAttrs(String topic, String content, MessageTypeEnum messageType) {
-        MqttMessage mqttMessage = createMqttMessage(content);
-        addUserProperties(mqttMessage, messageType);
-        sendUsingMqttClient(topic, mqttMessage);
     }
     
     /**
@@ -66,8 +47,11 @@ public class MqttMessageSenderHandler {
      * @param messageType 消息类型
      * @return 创建的 Spring Integration 消息
      */
-    private Message<String> createMessage(String topic, String content, MessageTypeEnum messageType) {
-        return MessageBuilder.withPayload(content)
+    private Message<MqttMessage> createMessage(String topic, String content, MessageTypeEnum messageType) {
+        MqttMessage mqttMessage = createMqttMessage(content);
+        addUserProperties(mqttMessage, messageType);
+        
+        return MessageBuilder.withPayload(mqttMessage)
                 .setHeader(MqttHeaders.TOPIC, topic)
                 .setHeader("MessageType", messageType.getType())
                 .setHeader("MessageId", UUID.randomUUID().toString())
@@ -115,27 +99,16 @@ public class MqttMessageSenderHandler {
      * @param message 消息
      * @param topic   主题
      */
-    private void sendUsingMessageHandler(Message<String> message, String topic) {
+    private void sendUsingMessageHandler(Message<MqttMessage> message, String topic) {
         try {
-            mqttMessageHandler.handleMessage(message);
+            if(!mqttv5PahoMessageHandler.isRunning()){
+                return;
+            }
+            mqttv5PahoMessageHandler.handleMessage(message);
             log.info("Successfully sent message to topic: {}, message: {}", topic, message);
         } catch (Exception e) {
             log.error("Failed to send message to topic: {}, message: {}", topic, message, e);
         }
     }
-    
-    /**
-     * 使用 MqttClient 发送消息
-     *
-     * @param topic       主题
-     * @param mqttMessage MqttMessage 对象
-     */
-    private void sendUsingMqttClient(String topic, MqttMessage mqttMessage) {
-        try {
-            mqttClient.publish(topic, mqttMessage);
-            log.info("Successfully sent message to topic: {}, message: {}", topic, mqttMessage);
-        } catch (Exception e) {
-            log.error("Failed to send message to topic: {}, message: {}", topic, mqttMessage, e);
-        }
-    }
+
 }
