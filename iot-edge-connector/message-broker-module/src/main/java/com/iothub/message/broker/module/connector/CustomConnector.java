@@ -20,12 +20,12 @@ public class CustomConnector extends DefaultDeviceConnector {
     
     @Override
     public Object doReportProperty() {
-        return null;
+        return Map.of("key", "value");
     }
     
     @Override
     public Object doReportEvent() {
-        return null;
+        return Map.of("key", "value");
     }
     
     @Override

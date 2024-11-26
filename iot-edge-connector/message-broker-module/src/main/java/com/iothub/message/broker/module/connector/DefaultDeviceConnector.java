@@ -74,7 +74,7 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
     
     private void handleResult(Object result, MessageTypeEnum messageTypeEnum) {
         log.info("handle result：{}, messageTypeEnum:{}", result, messageTypeEnum);
-        mqttMessageSenderHandler.sendMessage("/test", StrUtil.toString(result), messageTypeEnum);
+        mqttMessageSenderHandler.sendMessageWithUserAttrs("/topic", StrUtil.toString(result), messageTypeEnum);
     }
     
     /**

@@ -7,11 +7,11 @@ import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.eclipse.paho.mqttv5.common.packet.UserProperty;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.integration.mqtt.outbound.Mqttv5PahoMessageHandler;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -25,11 +25,11 @@ import java.util.UUID;
 @Component
 public class MqttMessageSenderHandler {
     
-    private final MessageHandler mqttMessageHandler;
+    private final Mqttv5PahoMessageHandler mqttMessageHandler;
     private final MqttClient mqttClient;
     
     // 构造函数通过依赖注入获取 Mqttv5PahoMessageHandler 和 MqttClient
-    public MqttMessageSenderHandler(@Qualifier("mqttOutbound") MessageHandler mqttMessageHandler, MqttClient mqttClient) {
+    public MqttMessageSenderHandler(@Qualifier(value = "mqttOutbound") Mqttv5PahoMessageHandler mqttMessageHandler, MqttClient mqttClient) {
         this.mqttMessageHandler = mqttMessageHandler;
         this.mqttClient = mqttClient;
     }

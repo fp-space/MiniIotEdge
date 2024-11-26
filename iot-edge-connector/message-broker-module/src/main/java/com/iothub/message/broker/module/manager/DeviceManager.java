@@ -66,10 +66,10 @@ public class DeviceManager {
         List<Device> devices = new ArrayList<>();
         
         // 使用全参构造器，设置每个字段
-        devices.add(new Device(1L, "device-001", "did-001", "Device 1", true, false,
+        devices.add(new Device(1L, "device-001", "did-001", "Device 1", true, true,
                 "mfg-001", "product-001", "custom", "2023-10-01"));
         
-        devices.add(new Device(2L, "device-002", "did-002", "Device 2", false, true,
+        devices.add(new Device(2L, "device-002", "did-002", "Device 2", true, true,
                 "mfg-002", "product-002", "custom", "2023-10-02"));
         
         devices.add(new Device(3L, "device-003", "did-003", "Device 3", true, false,
