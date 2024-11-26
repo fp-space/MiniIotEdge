@@ -1,11 +1,16 @@
 package com.iothub.message.broker.module.connector;
 
+import cn.hutool.core.util.StrUtil;
 import com.iothub.message.broker.module.entity.Device;
 import com.iothub.message.broker.module.entity.DeviceStatus;
 import com.iothub.message.broker.module.entity.MessageRequest;
+import com.iothub.message.broker.module.enums.MessageTypeEnum;
+import com.iothub.message.broker.module.handler.MqttMessageSenderHandler;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Resource;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 默认设备连接器抽象类，提供了设备控制命令的模板方法，
@@ -18,7 +23,8 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
     // 使用 ThreadLocal 来保证每个虚拟线程拥有独立的 Device 实例
     private static final ThreadLocal<Device> deviceThreadLocal = new ThreadLocal<>();
     
-    public DefaultDeviceConnector() {}
+    @Resource
+    private MqttMessageSenderHandler mqttMessageSenderHandler;
     
     /**
      * 执行控制命令，模板方法
@@ -26,8 +32,8 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
      */
     @Override
     public final void exec(MessageRequest request) {
-        String identify = request.getIdentify();
-        Map<String, Object> params = request.getInputParams();
+        String identify = request.identify();
+        Map<String, Object> params = request.inputParams();
         log.info("Executing identify: identify={}, params={}", identify, params);
         
         try {
@@ -37,9 +43,8 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
             // 执行控制命令，交由子类实现
             Object result = executeControlCommand(identify, params);
             
-            // 处理命令结果（例如将结果上报到 MQTT 或记录日志）
-            handleCommandResult(identify, result);
-            
+            // 处理命令结果
+            handleResult(result, MessageTypeEnum.CONTROL_COMMAND);
         } catch (Exception e) {
             log.error("Error executing identify: {}", e.getMessage(), e);
             handleExecError(identify, e);
@@ -48,33 +53,48 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
     
     /**
      * 上报属性（业务逻辑由子类实现）
-     * @param propertyName 属性名称
-     * @param value 属性值
      */
     @Override
-    public final void reportProperty(String propertyName, Object value) {
-        log.info("Reporting property: {}={}", propertyName, value);
+    public final void reportProperty() {
+        log.info("Device {} Reporting property", this.getDevice().code());
         try {
             // 子类实现上报属性的具体业务逻辑
-            doReportProperty(propertyName, value);
+            Object result = doReportProperty();
+            
+            if(Objects.isNull(result)){
+                return;
+            }
+            
+            // 处理命令结果（例如将结果上报到 MQTT 或记录日志）
+            handleResult(result, MessageTypeEnum.PROPERTY_UPDATE);
         } catch (Exception e) {
-            log.error("Error reporting property: {}", e.getMessage(), e);
+            log.error("Error reporting device: {}", e.getMessage(), e);
         }
+    }
+    
+    private void handleResult(Object result, MessageTypeEnum messageTypeEnum) {
+        log.info("handle result：{}, messageTypeEnum:{}", result, messageTypeEnum);
+        mqttMessageSenderHandler.sendMessage("/test", StrUtil.toString(result), messageTypeEnum);
     }
     
     /**
      * 上报事件（业务逻辑由子类实现）
-     * @param event 事件名称
-     * @param payload 事件内容
      */
     @Override
-    public final void reportEvent(String event, Map<String, Object> payload) {
-        log.info("Reporting event: {} with payload: {}", event, payload);
+    public final void reportEvent() {
+        log.info("Device {} Reporting event", this.getDevice().code());
         try {
-            // 子类实现上报事件的具体业务逻辑
-            doReportEvent(event, payload);
+            // 子类实现上报属性的具体业务逻辑
+            Object result = doReportEvent();
+            
+            if(Objects.isNull(result)){
+                return;
+            }
+            
+            // 处理命令结果（例如将结果上报到 MQTT 或记录日志）
+            handleResult(result, MessageTypeEnum.EVENT_NOTIFICATION);
         } catch (Exception e) {
-            log.error("Error reporting event: {}", e.getMessage(), e);
+            log.error("Error reporting device: {}", e.getMessage(), e);
         }
     }
     
@@ -124,17 +144,13 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
     
     /**
      * 上报属性的具体实现（由子类实现）
-     * @param propertyName 属性名称
-     * @param value 属性值
      */
-    public abstract void doReportProperty(String propertyName, Object value);
+    public abstract Object doReportProperty();
     
     /**
      * 上报事件的具体实现（由子类实现）
-     * @param event 事件名称
-     * @param payload 事件内容
      */
-    public abstract void doReportEvent(String event, Map<String, Object> payload);
+    public abstract Object doReportEvent();
     
     /**
      * 连接器标识符

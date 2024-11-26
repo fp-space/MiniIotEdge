@@ -34,7 +34,7 @@ public abstract class ScheduledTaskManager {
             DefaultDeviceConnector connector = deviceConnectorManager.getConnectorByIdentify(device.model());
             connector.setDevice(device);
             if(Objects.nonNull(connector)){
-//                connector.reportProperty();
+                connector.reportProperty();
 //                connector.reportEvent();
             }
             

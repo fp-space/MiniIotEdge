@@ -19,13 +19,13 @@ public class CustomConnector extends DefaultDeviceConnector {
     }
     
     @Override
-    public void doReportProperty(String propertyName, Object value) {
-    
+    public Object doReportProperty() {
+        return null;
     }
     
     @Override
-    public void doReportEvent(String event, Map<String, Object> payload) {
-    
+    public Object doReportEvent() {
+        return null;
     }
     
     @Override

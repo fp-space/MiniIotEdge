@@ -2,6 +2,7 @@ package com.iothub.message.broker.module.service.impl;
 
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONUtil;
+import com.google.gson.Gson;
 import com.iothub.message.broker.module.connector.CustomConnector;
 import com.iothub.message.broker.module.connector.DefaultDeviceConnector;
 import com.iothub.message.broker.module.entity.MessageRequest;
@@ -84,7 +85,11 @@ public class ControlCommandProcessor implements IotMessageProcessor {
     }
     
     private void executeCommand(String content, DefaultDeviceConnector connector) {
-        MessageRequest request = JSONUtil.parse(content).toBean(new TypeReference<>(){});
+        
+        // 创建 Gson 对象
+        Gson gson = new Gson();
+        // 使用 Gson 反序列化 JSON 字符串为 MessageRequest 对象
+        MessageRequest request = gson.fromJson(content, MessageRequest.class);
         
         if (Objects.nonNull(request)) {
             // 执行命令
