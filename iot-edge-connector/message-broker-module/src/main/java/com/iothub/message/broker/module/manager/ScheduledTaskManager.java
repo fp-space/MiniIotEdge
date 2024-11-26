@@ -11,10 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Slf4j
 @Component
@@ -41,19 +38,24 @@ public class ScheduledTaskManager {
     private final Semaphore propertySemaphore;
     private final Semaphore eventSemaphore;
     
+    // 定义调度器
+    private final ScheduledExecutorService scheduler;
+    
     public ScheduledTaskManager() {
         // 初始化虚拟线程池和信号量
         this.propertyExecutorService = Executors.newVirtualThreadPerTaskExecutor();
         this.eventExecutorService = Executors.newVirtualThreadPerTaskExecutor();
         this.propertySemaphore = new Semaphore(MAX_CONCURRENT_PROPERTY_TASKS);
         this.eventSemaphore = new Semaphore(MAX_CONCURRENT_EVENT_TASKS);
+        scheduler = Executors.newScheduledThreadPool(2);
     }
     
     @PostConstruct
     public void init() {
         // 延迟启动10秒钟后执行首次任务
-        Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(this::processPropertyReports, 10, PROPERTY_REPORT_INTERVAL, TimeUnit.MINUTES);
-        Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(this::processEventReports, 10, EVENT_REPORT_INTERVAL, TimeUnit.MINUTES);
+        scheduler.scheduleWithFixedDelay(this::processPropertyReports, 0, PROPERTY_REPORT_INTERVAL, TimeUnit.MINUTES);
+        scheduler.scheduleWithFixedDelay(this::processEventReports, 0, EVENT_REPORT_INTERVAL, TimeUnit.MINUTES);
+        log.info("Scheduled tasks have been successfully initialized and will start after a delay of 10 seconds.");
     }
     
     // 处理设备的属性报告（每5分钟执行一次）
@@ -64,6 +66,7 @@ public class ScheduledTaskManager {
                     .filter(entry -> entry.isActive() && entry.isOffline())
                     .toList();
             
+            log.info("执行属性上报任务，当前在线设备数量为:{}", deviceList.size());
             // 将设备分批处理，每批处理 MAX_CONCURRENT_PROPERTY_TASKS 个设备
             for (Device device : deviceList) {
                 // 尝试获取属性报告信号量许可
@@ -93,6 +96,8 @@ public class ScheduledTaskManager {
             List<Device> deviceList = devicesMap.values().stream()
                     .filter(entry -> entry.isActive() && entry.isOffline())
                     .toList();
+            
+            log.info("执行事件上报任务，当前在线设备数量为:{}", deviceList.size());
             
             // 将设备分批处理，每批处理 MAX_CONCURRENT_EVENT_TASKS 个设备
             for (Device device : deviceList) {
@@ -153,6 +158,7 @@ public class ScheduledTaskManager {
         // 关闭虚拟线程池，确保所有任务完成
         propertyExecutorService.shutdown();
         eventExecutorService.shutdown();
+        scheduler.shutdown(); // 关闭调度器
         
         // 等待线程池中的所有任务完成
         if (!propertyExecutorService.awaitTermination(TASK_TIMEOUT, TimeUnit.SECONDS)) {
@@ -160,6 +166,9 @@ public class ScheduledTaskManager {
         }
         if (!eventExecutorService.awaitTermination(TASK_TIMEOUT, TimeUnit.SECONDS)) {
             eventExecutorService.shutdownNow();
+        }
+        if (!scheduler.awaitTermination(TASK_TIMEOUT, TimeUnit.SECONDS)) {
+            scheduler.shutdownNow();
         }
     }
 }
