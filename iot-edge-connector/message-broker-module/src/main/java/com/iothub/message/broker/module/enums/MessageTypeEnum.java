@@ -6,7 +6,6 @@ public enum MessageTypeEnum {
     PROPERTY_UPDATE("属性更新", "property_update"), // 属性更新
     HEARTBEAT_MONITORING("心跳监控", "heartbeat_monitoring"), // 心跳监控
     CONTROL_COMMAND("控制命令", "control_command"), // 控制命令
-    RESPONSE_TO_EVENT("事件响应", "response_to_event"), // 事件响应
     UNSUPPORTED("不支持的类型", "unsupported");         // 不支持的类型
     
     private final String description;
