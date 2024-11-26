@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 父模块信息 -->
+    <groupId>com.iothhub</groupId>
+    <artifactId>MiniIotEdge</artifactId>
+    <version>${project.version}</version>
+    <packaging>pom</packaging>
+
+    <!-- 子模块 -->
+    <modules>
+        <module>iot-edge-connector</module>
+        <module>iot-core</module>
+        <module>iot-parent</module>
+    </modules>
+
+    <!-- 全局属性配置 -->
+    <properties>
+        <project.version>v0.0.1-alpha</project.version>
+    </properties>
+</project>
