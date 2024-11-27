@@ -1,12 +1,13 @@
-package com.iothub.message.broker.module.connector;
+package com.iothub.message.broker.module.logic.connector;
 
-import com.iothub.message.broker.module.entity.DeviceStatus;
-import com.iothub.message.broker.module.entity.MessageRequest;
+import com.iothub.message.broker.module.domain.DeviceStatus;
+import com.iothub.message.broker.module.domain.MessageRequest;
 
 public interface DeviceConnector {
     
     /**
      * 处理控制命令，接收下发的命令并执行相应的业务逻辑
+     *
      * @param request 参数
      */
     void exec(MessageRequest request);
@@ -23,6 +24,7 @@ public interface DeviceConnector {
     
     /**
      * 设备当前状态
+     *
      * @return 设备状态
      */
     DeviceStatus getDeviceStatus();

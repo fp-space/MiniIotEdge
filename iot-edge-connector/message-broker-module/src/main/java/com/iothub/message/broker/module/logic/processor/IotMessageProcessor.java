@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module.service;
+package com.iothub.message.broker.module.logic.processor;
 
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
 

@@ -1,17 +1,16 @@
-package com.iothub.message.broker.module.service.impl;
+package com.iothub.message.broker.module.logic.processor;
 
 import com.google.gson.Gson;
-import com.iothub.message.broker.module.connector.DefaultDeviceConnector;
-import com.iothub.message.broker.module.entity.MessageRequest;
-import com.iothub.message.broker.module.manager.DeviceConnectorManager;
-import com.iothub.message.broker.module.entity.Device;
+import com.iothub.message.broker.module.logic.connector.DefaultDeviceConnector;
+import com.iothub.message.broker.module.domain.Device;
+import com.iothub.message.broker.module.domain.MessageRequest;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
-import com.iothub.message.broker.module.manager.DeviceRegistry;
-import com.iothub.message.broker.module.service.IotMessageProcessor;
+import com.iothub.message.broker.module.logic.manager.DeviceConnectorManager;
+import com.iothub.message.broker.module.logic.manager.DeviceRegistry;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,13 +19,11 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ControlCommandProcessor implements IotMessageProcessor {
     
+    private static final String TOPIC_REGEX = "^/[^/]+/([^/]+)$";
     @Resource
     private DeviceConnectorManager deviceConnectorManager;
-    
     @Resource
     private DeviceRegistry deviceRegistry;
-    
-    private static final String TOPIC_REGEX = "^/[^/]+/([^/]+)$";
     
     @Override
     public void process(String topic, String content) {

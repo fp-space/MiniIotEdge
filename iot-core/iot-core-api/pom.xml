@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<!-- 父 POM 配置 -->
-	<parent>
-		<groupId>com.iothub.core</groupId>
-		<artifactId>iot-core</artifactId>
-		<version>v0.0.1-alpha</version>
-		<relativePath/>
-	</parent>
+    <!-- 父 POM 配置 -->
+    <parent>
+        <groupId>com.iothub.core</groupId>
+        <artifactId>iot-core</artifactId>
+        <version>v0.0.1-alpha</version>
+        <relativePath/>
+    </parent>
 
-	<properties>
-		<project.version>v0.0.1-alpha</project.version>
-	</properties>
+    <properties>
+        <project.version>v0.0.1-alpha</project.version>
+    </properties>
 
-	<packaging>jar</packaging>
-	<groupId>com.iothub.core.api</groupId>
-	<artifactId>iot-core-api</artifactId>
-	<version>v0.0.1-alpha</version>
+    <packaging>jar</packaging>
+    <groupId>com.iothub.core.api</groupId>
+    <artifactId>iot-core-api</artifactId>
+    <version>v0.0.1-alpha</version>
 
-	<!-- 子模块可以覆盖某些设置（如果有需要），否则继承父 POM -->
-	<dependencies>
-	</dependencies>
+    <!-- 子模块可以覆盖某些设置（如果有需要），否则继承父 POM -->
+    <dependencies>
+    </dependencies>
 
 </project>

@@ -1,7 +1,6 @@
-package com.iothub.message.broker.module.service.impl;
+package com.iothub.message.broker.module.logic.processor;
 
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
-import com.iothub.message.broker.module.service.IotMessageProcessor;
 
 public class HeartbeatDetectionProcessor implements IotMessageProcessor {
     @Override

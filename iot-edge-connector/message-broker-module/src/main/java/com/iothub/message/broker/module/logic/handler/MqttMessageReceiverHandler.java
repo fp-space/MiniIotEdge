@@ -1,9 +1,9 @@
-package com.iothub.message.broker.module.handler;
+package com.iothub.message.broker.module.logic.handler;
 
 import com.iothub.message.broker.module.annotations.Timed;
-import com.iothub.message.broker.module.queue.MqttMessageQueue;
-import com.iothub.message.broker.module.service.IotMessageProcessor;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
+import com.iothub.message.broker.module.utils.queue.MqttMessageQueue;
+import com.iothub.message.broker.module.logic.processor.IotMessageProcessor;
 import com.iothub.message.broker.module.utils.TimerUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;

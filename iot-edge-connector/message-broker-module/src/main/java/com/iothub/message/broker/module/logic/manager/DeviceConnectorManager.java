@@ -1,6 +1,6 @@
-package com.iothub.message.broker.module.manager;
+package com.iothub.message.broker.module.logic.manager;
 
-import com.iothub.message.broker.module.connector.DefaultDeviceConnector;
+import com.iothub.message.broker.module.logic.connector.DefaultDeviceConnector;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class DeviceConnectorManager {
      */
     public DefaultDeviceConnector getConnectorByIdentify(String identify) {
         
-        if(!identifyConnectorMap.containsKey(identify)){
+        if (!identifyConnectorMap.containsKey(identify)) {
             log.error("No connector found for identify: {}", identify);
             return null;  // 或者抛出自定义异常
         }

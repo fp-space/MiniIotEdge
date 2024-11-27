@@ -1,10 +1,11 @@
-package com.iothub.message.broker.module.manager;
+package com.iothub.message.broker.module.logic.manager;
 
-import com.iothub.message.broker.module.entity.Device;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import com.iothub.message.broker.module.domain.Device;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -16,14 +17,33 @@ import java.util.function.Predicate;
 @Slf4j
 public class DeviceManager {
     
-    private final DeviceRegistry deviceRegistry;
     private static final int RELOAD_INTERVAL_SECONDS = 60; // 定时同步设备信息的间隔时间（秒）
-    
+    private final DeviceRegistry deviceRegistry;
     private ScheduledExecutorService reloadService;
     
     // 通过构造函数注入一个共享的 ScheduledExecutorService 实例
     public DeviceManager(DeviceRegistry deviceRegistry) {
         this.deviceRegistry = deviceRegistry;
+    }
+    
+    // 静态方法：通过构造函数，直接操作设备管理器中的设备
+    public static void addOrUpdateDeviceStatic(DeviceRegistry deviceRegistry, Device device) {
+        deviceRegistry.addOrUpdateDevice(device);
+    }
+    
+    // 静态方法：批量更新设备
+    public static void updateDevicesStatic(DeviceRegistry deviceRegistry, List<Device> devices) {
+        devices.forEach(deviceRegistry::addOrUpdateDevice);
+        log.info("Static batch update complete: " + devices.size() + " devices updated.");
+    }
+    
+    // 静态方法：检查设备健康状态
+    public static void checkDeviceHealthStatic(DeviceRegistry deviceRegistry) {
+        List<Device> unhealthyDevices = deviceRegistry.getDevicesByCondition(device -> !device.isActive());
+        if (!unhealthyDevices.isEmpty()) {
+            log.info("Static unhealthy devices found: " + unhealthyDevices);
+            // 执行必要的操作，例如发送警报、修复或更新设备状态
+        }
     }
     
     // 在初始化时启动定时任务
@@ -36,21 +56,6 @@ public class DeviceManager {
         
         // 定期重新加载设备信息
         reloadService.scheduleAtFixedRate(this::reloadDevices, RELOAD_INTERVAL_SECONDS, RELOAD_INTERVAL_SECONDS, TimeUnit.SECONDS);
-    }
-    
-    // 添加或更新设备
-    public void addOrUpdateDevice(Device device) {
-        deviceRegistry.addOrUpdateDevice(device);
-    }
-    
-    // 获取单个设备
-    public Device getDevice(String deviceCode) {
-        return deviceRegistry.getDevice(deviceCode);
-    }
-    
-    // 根据条件获取设备
-    public List<Device> getDevicesByCondition(Predicate<Device> condition) {
-        return deviceRegistry.getDevicesByCondition(condition);
     }
     
     // 定期重新加载设备信息
@@ -83,6 +88,21 @@ public class DeviceManager {
         log.info("Batch update complete: " + devices.size() + " devices updated.");
     }
     
+    // 添加或更新设备
+    public void addOrUpdateDevice(Device device) {
+        deviceRegistry.addOrUpdateDevice(device);
+    }
+    
+    // 获取单个设备
+    public Device getDevice(String deviceCode) {
+        return deviceRegistry.getDevice(deviceCode);
+    }
+    
+    // 根据条件获取设备
+    public List<Device> getDevicesByCondition(Predicate<Device> condition) {
+        return deviceRegistry.getDevicesByCondition(condition);
+    }
+    
     // 检查设备健康状态
     public void checkDeviceHealth() {
         List<Device> unhealthyDevices = deviceRegistry.getDevicesByCondition(device -> !device.isActive());
@@ -103,26 +123,6 @@ public class DeviceManager {
             }
         });
         log.info("Batch activate complete: " + deviceCodes.size() + " devices activated.");
-    }
-    
-    // 静态方法：通过构造函数，直接操作设备管理器中的设备
-    public static void addOrUpdateDeviceStatic(DeviceRegistry deviceRegistry, Device device) {
-        deviceRegistry.addOrUpdateDevice(device);
-    }
-    
-    // 静态方法：批量更新设备
-    public static void updateDevicesStatic(DeviceRegistry deviceRegistry, List<Device> devices) {
-        devices.forEach(deviceRegistry::addOrUpdateDevice);
-        log.info("Static batch update complete: " + devices.size() + " devices updated.");
-    }
-    
-    // 静态方法：检查设备健康状态
-    public static void checkDeviceHealthStatic(DeviceRegistry deviceRegistry) {
-        List<Device> unhealthyDevices = deviceRegistry.getDevicesByCondition(device -> !device.isActive());
-        if (!unhealthyDevices.isEmpty()) {
-            log.info("Static unhealthy devices found: " + unhealthyDevices);
-            // 执行必要的操作，例如发送警报、修复或更新设备状态
-        }
     }
     
     // 在类销毁时关闭 ScheduledExecutorService

@@ -1,6 +1,8 @@
-package com.iothub.message.broker.module.entity;
+package com.iothub.message.broker.module.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**

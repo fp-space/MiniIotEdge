@@ -1,6 +1,6 @@
-package com.iothub.message.broker.module.manager;
+package com.iothub.message.broker.module.logic.manager;
 
-import com.iothub.message.broker.module.entity.Device;
+import com.iothub.message.broker.module.domain.Device;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

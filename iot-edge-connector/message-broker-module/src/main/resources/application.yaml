@@ -7,6 +7,6 @@ spring:
     connection-timeout: 10s               # Connection timeout
     keep-alive-interval: 30s           # Keep-alive interval
     qos: 1  # 默认 QoS 质量服务级别
-#    input-output-channel-name: "mqttChannel"
+    #    input-output-channel-name: "mqttChannel"
     subscriptions:
       - /topic/#

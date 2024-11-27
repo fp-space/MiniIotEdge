@@ -37,6 +37,7 @@ public class MqttAdapterConfig {
     
     /**
      * 配置 MQTT 连接选项
+     *
      * @return MqttConnectionOptions 配置项
      */
     @Bean
@@ -53,6 +54,7 @@ public class MqttAdapterConfig {
     
     /**
      * 配置 MQTT 客户端
+     *
      * @param mqttConnectionOptions MQTT 连接选项
      * @return MqttClient 客户端实例
      * @throws MqttException MQTT 异常
@@ -136,7 +138,8 @@ public class MqttAdapterConfig {
     
     /**
      * 配置 Mqttv5 客户端管理器
-     * @param mqttAsyncClient MQTT 客户端
+     *
+     * @param mqttAsyncClient       MQTT 客户端
      * @param mqttConnectionOptions 连接选项
      * @return Mqttv5ClientManager 管理器实例
      */
@@ -148,16 +151,8 @@ public class MqttAdapterConfig {
     }
     
     /**
-     * 配置接收消息的通道
-     * @return MessageChannel 接收消息通道
-     */
-    @Bean
-    public MessageChannel mqttInputChannel() {
-        return new PublishSubscribeChannel();  // 发布-订阅通道，用于接收消息
-    }
-    
-    /**
      * 配置 MQTT 订阅适配器，接收消息并发送到输入通道
+     *
      * @param mqttConnectionOptions 连接选项
      * @return MessageProducer 订阅适配器
      */
@@ -183,7 +178,18 @@ public class MqttAdapterConfig {
     }
     
     /**
+     * 配置接收消息的通道
+     *
+     * @return MessageChannel 接收消息通道
+     */
+    @Bean
+    public MessageChannel mqttInputChannel() {
+        return new PublishSubscribeChannel();  // 发布-订阅通道，用于接收消息
+    }
+    
+    /**
      * 配置发送消息的通道
+     *
      * @return MessageChannel 发送消息通道
      */
     @Bean

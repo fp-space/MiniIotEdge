@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module.queue;
+package com.iothub.message.broker.module.utils.queue;
 
 import lombok.extern.slf4j.Slf4j;
 

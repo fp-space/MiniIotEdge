@@ -1,8 +1,8 @@
 package com.iothub.message.broker.module.config;
 
-import com.iothub.message.broker.module.connector.DefaultDeviceConnector;
-import com.iothub.message.broker.module.service.IotMessageProcessor;
+import com.iothub.message.broker.module.logic.connector.DefaultDeviceConnector;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
+import com.iothub.message.broker.module.logic.processor.IotMessageProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -10,6 +10,20 @@ public class TimerUtil {
     private static final ThreadLocal<StopWatch> stopWatchThreadLocal = ThreadLocal.withInitial(StopWatch::new);
     
     /**
+     * 执行某个任务并计算时间
+     *
+     * @param taskName 任务名称
+     * @param task     执行的任务
+     * @return 执行任务的耗时（单位：秒）
+     */
+    public static double executeWithTiming(String taskName, Runnable task) {
+        log.info("Executing task: {}", taskName);
+        startTimer(taskName);
+        task.run();
+        return stopTimer(taskName);
+    }
+    
+    /**
      * 开始计时
      */
     public static void startTimer(String taskName) {
@@ -29,19 +43,6 @@ public class TimerUtil {
         log.info("Task '{}' completed in: {} seconds", taskName, time);
         stopWatchThreadLocal.remove();  // 清理 ThreadLocal 中的 StopWatch 实例
         return time;
-    }
-    
-    /**
-     * 执行某个任务并计算时间
-     * @param taskName 任务名称
-     * @param task 执行的任务
-     * @return 执行任务的耗时（单位：秒）
-     */
-    public static double executeWithTiming(String taskName, Runnable task) {
-        log.info("Executing task: {}", taskName);
-        startTimer(taskName);
-        task.run();
-        return stopTimer(taskName);
     }
     
     /**

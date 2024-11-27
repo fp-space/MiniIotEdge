@@ -1,6 +1,7 @@
-package com.iothub.message.broker.module.handler;
+package com.iothub.message.broker.module.logic.handler;
 
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
@@ -12,7 +13,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -30,8 +30,8 @@ public class MqttMessageSenderHandler {
     /**
      * 发送带有指定消息类型的 MQTT 消息
      *
-     * @param topic     MQTT 主题
-     * @param content   消息内容
+     * @param topic       MQTT 主题
+     * @param content     消息内容
      * @param messageType 消息类型
      */
     public void publish(String topic, String content, @NonNull MessageTypeEnum messageType) {
@@ -42,8 +42,8 @@ public class MqttMessageSenderHandler {
     /**
      * 创建 Spring Integration 消息
      *
-     * @param topic     MQTT 主题
-     * @param content   消息内容
+     * @param topic       MQTT 主题
+     * @param content     消息内容
      * @param messageType 消息类型
      * @return 创建的 Spring Integration 消息
      */
@@ -56,6 +56,25 @@ public class MqttMessageSenderHandler {
                 .setHeader("MessageType", messageType.getType())
                 .setHeader("MessageId", UUID.randomUUID().toString())
                 .build();
+    }
+    
+    /**
+     * 使用 MqttPahoMessageHandler 发送 Spring Integration 消息
+     *
+     * @param message 消息
+     * @param topic   主题
+     */
+    private void sendUsingMessageHandler(Message<MqttMessage> message, String topic) {
+        try {
+            if (!mqttv5PahoMessageHandler.isRunning()) {
+                return;
+            }
+            
+            mqttv5PahoMessageHandler.handleMessage(message);
+            log.info("Successfully sent message to topic: {}, message: {}", topic, message);
+        } catch (Exception e) {
+            log.error("Failed to send message to topic: {}, message: {}", topic, message, e);
+        }
     }
     
     /**
@@ -77,8 +96,8 @@ public class MqttMessageSenderHandler {
     /**
      * 为 MQTT 消息添加用户自定义属性
      *
-     * @param mqttMessage   MqttMessage 对象
-     * @param messageType   消息类型
+     * @param mqttMessage MqttMessage 对象
+     * @param messageType 消息类型
      */
     private void addUserProperties(MqttMessage mqttMessage, MessageTypeEnum messageType) {
         Map<String, String> headers = new HashMap<>();
@@ -93,23 +112,4 @@ public class MqttMessageSenderHandler {
         });
     }
     
-    /**
-     * 使用 MqttPahoMessageHandler 发送 Spring Integration 消息
-     *
-     * @param message 消息
-     * @param topic   主题
-     */
-    private void sendUsingMessageHandler(Message<MqttMessage> message, String topic) {
-        try {
-            if(!mqttv5PahoMessageHandler.isRunning()){
-                return;
-            }
-            
-            mqttv5PahoMessageHandler.handleMessage(message);
-            log.info("Successfully sent message to topic: {}, message: {}", topic, message);
-        } catch (Exception e) {
-            log.error("Failed to send message to topic: {}, message: {}", topic, message, e);
-        }
-    }
-
 }

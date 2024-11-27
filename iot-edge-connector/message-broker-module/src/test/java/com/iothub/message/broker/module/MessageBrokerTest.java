@@ -1,7 +1,7 @@
 package com.iothub.message.broker.module;
 
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
-import com.iothub.message.broker.module.handler.MqttMessageSenderHandler;
+import com.iothub.message.broker.module.logic.handler.MqttMessageSenderHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
