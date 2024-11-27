@@ -14,7 +14,7 @@ import com.iothub.message.broker.module.service.IotMessageProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

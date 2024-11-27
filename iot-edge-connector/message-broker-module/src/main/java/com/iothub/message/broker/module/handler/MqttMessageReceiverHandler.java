@@ -5,14 +5,14 @@ import com.iothub.message.broker.module.queue.MqttMessageQueue;
 import com.iothub.message.broker.module.service.IotMessageProcessor;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
 import com.iothub.message.broker.module.utils.TimerUtil;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.*;

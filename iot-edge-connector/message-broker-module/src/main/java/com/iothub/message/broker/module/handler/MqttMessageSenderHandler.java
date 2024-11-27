@@ -12,7 +12,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -104,6 +104,7 @@ public class MqttMessageSenderHandler {
             if(!mqttv5PahoMessageHandler.isRunning()){
                 return;
             }
+            
             mqttv5PahoMessageHandler.handleMessage(message);
             log.info("Successfully sent message to topic: {}, message: {}", topic, message);
         } catch (Exception e) {
