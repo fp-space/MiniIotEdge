@@ -20,7 +20,7 @@ public class MessageBrokerTest {
     public void testMqttSendMessage() {
         String content = "Hello, World!";
         String topic = "/topic";
-        mqttMessageSenderHandler.sendMessageWithUserAttrs(topic, content, MessageTypeEnum.EVENT_NOTIFICATION);
+        mqttMessageSenderHandler.publish(topic, content, MessageTypeEnum.EVENT_NOTIFICATION);
     }
     
     @Test
@@ -34,7 +34,7 @@ public class MessageBrokerTest {
                 }
                 """;
         String topic = "/topic";
-        mqttMessageSenderHandler.sendMessageWithUserAttrs(topic, content, MessageTypeEnum.CONTROL_COMMAND);
+        mqttMessageSenderHandler.publish(topic, content, MessageTypeEnum.CONTROL_COMMAND);
     }
 }
 

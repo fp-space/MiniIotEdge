@@ -6,9 +6,8 @@ import com.iothub.message.broker.module.entity.DeviceStatus;
 import com.iothub.message.broker.module.entity.MessageRequest;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
 import com.iothub.message.broker.module.handler.MqttMessageSenderHandler;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Objects;
 
