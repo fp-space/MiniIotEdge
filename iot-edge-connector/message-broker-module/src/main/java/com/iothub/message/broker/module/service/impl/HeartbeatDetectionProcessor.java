@@ -11,6 +11,6 @@ public class HeartbeatDetectionProcessor implements IotMessageProcessor {
     
     @Override
     public MessageTypeEnum getMessageType() {
-        return MessageTypeEnum.HEARTBEAT_MONITORING;
+        return MessageTypeEnum.HEARTBEAT_RESPONSE;
     }
 }

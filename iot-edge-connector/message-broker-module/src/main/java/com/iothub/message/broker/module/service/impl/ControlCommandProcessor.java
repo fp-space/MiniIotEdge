@@ -1,9 +1,6 @@
 package com.iothub.message.broker.module.service.impl;
 
-import cn.hutool.core.lang.TypeReference;
-import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
-import com.iothub.message.broker.module.connector.CustomConnector;
 import com.iothub.message.broker.module.connector.DefaultDeviceConnector;
 import com.iothub.message.broker.module.entity.MessageRequest;
 import com.iothub.message.broker.module.manager.DeviceConnectorManager;
@@ -49,6 +46,7 @@ public class ControlCommandProcessor implements IotMessageProcessor {
         }
         
         DefaultDeviceConnector connector = initConnector(device);
+        
         if (connector == null) {
             log.error("Failed to initialize device connector for device: {}", deviceCode);
             return;
@@ -80,6 +78,9 @@ public class ControlCommandProcessor implements IotMessageProcessor {
     private DefaultDeviceConnector initConnector(Device device) {
         String identify = device.model();
         DefaultDeviceConnector connector = deviceConnectorManager.getConnectorByIdentify(identify);
+        if (connector == null) {
+            return null;
+        }
         connector.setDevice(device);
         return connector;
     }

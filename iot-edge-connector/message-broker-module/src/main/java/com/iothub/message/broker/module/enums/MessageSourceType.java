@@ -6,9 +6,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum MessageSourceType {
     
-    CLOUD("Cloud", "云端"),       // 云端来源
-    EDGE("Edge", "边端"),         // 边端来源
-    OTHER("Other", "其他");       // 其他来源
+    CLOUD("CLOUD", "云端"),       // 云端来源
+    EDGE("EDGE", "边端"),         // 边端来源
+    UNKNOWN("UNKNOWN", "其他");       // 其他来源
     
     @Getter
     private final String code;         // 来源编码

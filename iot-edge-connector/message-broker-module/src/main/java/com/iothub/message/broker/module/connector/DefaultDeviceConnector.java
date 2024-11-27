@@ -65,7 +65,7 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
             }
             
             // 处理命令结果（例如将结果上报到 MQTT 或记录日志）
-            handleResult(result, MessageTypeEnum.PROPERTY_UPDATE);
+            handleResult(result, MessageTypeEnum.PROPERTY);
         } catch (Exception e) {
             log.error("Error reporting device: {}", e.getMessage(), e);
         }
@@ -91,7 +91,7 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
             }
             
             // 处理命令结果（例如将结果上报到 MQTT 或记录日志）
-            handleResult(result, MessageTypeEnum.EVENT_NOTIFICATION);
+            handleResult(result, MessageTypeEnum.EVENT);
         } catch (Exception e) {
             log.error("Error reporting device: {}", e.getMessage(), e);
         }

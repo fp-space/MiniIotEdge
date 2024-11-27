@@ -20,7 +20,7 @@ public class MessageBrokerTest {
     public void testMqttSendMessage() {
         String content = "Hello, World!";
         String topic = "/topic";
-        mqttMessageSenderHandler.publish(topic, content, MessageTypeEnum.EVENT_NOTIFICATION);
+        mqttMessageSenderHandler.publish(topic, content, MessageTypeEnum.EVENT);
     }
     
     @Test
