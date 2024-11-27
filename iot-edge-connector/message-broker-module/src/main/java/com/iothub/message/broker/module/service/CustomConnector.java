@@ -1,7 +1,7 @@
 package com.iothub.message.broker.module.service;
 
 import com.iothub.message.broker.module.domain.DeviceStatus;
-import com.iothub.message.broker.module.logic.connector.DefaultDeviceConnector;
+import com.iothub.message.broker.module.core.connector.DefaultDeviceConnector;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -15,17 +15,17 @@ public class CustomConnector extends DefaultDeviceConnector {
     }
     
     @Override
-    public Object doReportEvent() {
+    public Map<String, Object> doReportEvent() {
         return Map.of("key", "value");
     }
     
     @Override
-    public Object doReportProperty() {
+    public Map<String, Object> doReportProperty() {
         return Map.of("key", "value");
     }
     
     @Override
-    public Object executeControlCommand(String identify, Map<String, Object> params) {
+    public Map<String, Object> doExec(String identify, Map<String, Object> params) {
         return null;
     }
     

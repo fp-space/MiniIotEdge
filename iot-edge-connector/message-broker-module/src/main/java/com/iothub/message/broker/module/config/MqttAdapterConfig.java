@@ -1,5 +1,6 @@
 package com.iothub.message.broker.module.config;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.mqttv5.client.*;
 import org.eclipse.paho.mqttv5.common.MqttException;
@@ -48,7 +49,8 @@ public class MqttAdapterConfig {
         options.setKeepAliveInterval(600);  // 保持连接
         options.setUserName(mqttConfigProperties.username());
         options.setPassword(mqttConfigProperties.password().getBytes());
-        options.setCleanStart(true);  // 保持会话
+//        options.setCleanStart(true);  // 保持会话
+        options.setAutomaticReconnect(true);  // 启用自动重连
         return options;
     }
     
@@ -66,12 +68,14 @@ public class MqttAdapterConfig {
         
         // 创建 MQTT 客户端实例
         MqttAsyncClient client = new MqttAsyncClient(brokerUrl, clientId);
+        client.setManualAcks(false);
         
         // 使用 AtomicBoolean 标记是否正在重连，防止多次重连
         AtomicBoolean reconnecting = new AtomicBoolean(false);
         
         // 设置回调处理
         client.setCallback(new MqttCallback() {
+            @SneakyThrows
             @Override
             public void disconnected(MqttDisconnectResponse mqttDisconnectResponse) {
                 // 处理连接丢失，自动重连
@@ -115,10 +119,11 @@ public class MqttAdapterConfig {
     }
     
     // 自动重连机制
-    private void reconnect(MqttAsyncClient client, MqttConnectionOptions options, AtomicBoolean reconnecting) {
+    private synchronized void reconnect(MqttAsyncClient client, MqttConnectionOptions options, AtomicBoolean reconnecting) {
         try {
             if (!client.isConnected()) {
                 log.info("尝试重新连接 MQTT...");
+                client.setClientId(mqttConfigProperties.clientId() + "-" + System.currentTimeMillis());
                 client.connect(options);
                 log.info("MQTT连接成功");
             }
@@ -202,7 +207,7 @@ public class MqttAdapterConfig {
      */
     @Bean
     public Mqttv5PahoMessageHandler mqttv5PahoMessageHandler(Mqttv5ClientManager mqttv5ClientManager) {
-        String clientId = "mqttOutbound-" + mqttConfigProperties.clientId();  // 生成唯一的客户端ID
+        String clientId = "mqttOutbound-" + mqttConfigProperties.clientId() + "-" + System.currentTimeMillis();
         log.info("MQTT消息处理器（生产者）clientId:{}", clientId);
         
         // 创建消息发送处理器

@@ -1,6 +1,6 @@
-package com.iothub.message.broker.module.logic.manager;
+package com.iothub.message.broker.module.core.manager;
 
-import com.iothub.message.broker.module.logic.connector.DefaultDeviceConnector;
+import com.iothub.message.broker.module.core.connector.DefaultDeviceConnector;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;

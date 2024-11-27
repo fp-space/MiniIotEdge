@@ -1,7 +1,8 @@
-package com.iothub.message.broker.module.logic.manager;
+package com.iothub.message.broker.module.core.manager;
 
-import com.iothub.message.broker.module.logic.connector.DefaultDeviceConnector;
+import com.iothub.message.broker.module.core.connector.DefaultDeviceConnector;
 import com.iothub.message.broker.module.domain.Device;
+import com.iothub.message.broker.module.utils.MqttUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;
@@ -57,6 +58,10 @@ public class ScheduledTaskManager {
     // 处理设备的属性报告（每5分钟执行一次）
     private void processPropertyReports() {
         
+        if(!MqttUtil.isMqttClientAlive()){
+            return;
+        }
+        
         try {
             Map<String, Device> devicesMap = deviceRegistry.getAllDeviceMap();
             List<Device> deviceList = devicesMap.values().stream()
@@ -88,6 +93,10 @@ public class ScheduledTaskManager {
     
     // 处理设备的事件报告（每10分钟执行一次）
     private void processEventReports() {
+        
+        if(!MqttUtil.isMqttClientAlive()){
+            return;
+        }
         
         try {
             Map<String, Device> devicesMap = deviceRegistry.getAllDeviceMap();

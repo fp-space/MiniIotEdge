@@ -1,16 +1,16 @@
-package com.iothub.message.broker.module.logic.connector;
+package com.iothub.message.broker.module.core.connector;
 
 import cn.hutool.core.util.StrUtil;
+import com.iothub.message.broker.module.domain.DataPayload;
 import com.iothub.message.broker.module.domain.Device;
 import com.iothub.message.broker.module.domain.DeviceStatus;
 import com.iothub.message.broker.module.domain.MessageRequest;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
-import com.iothub.message.broker.module.logic.handler.MqttMessageSenderHandler;
+import com.iothub.message.broker.module.core.handler.MqttMessageSenderHandler;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 默认设备连接器抽象类，提供了设备控制命令的模板方法，
@@ -40,10 +40,19 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
             validateExecParams(identify, params);
             
             // 执行控制命令，交由子类实现
-            Object result = executeControlCommand(identify, params);
+            Map<String, Object> result = doExec(identify, params);
+            
+            if(result.isEmpty()){
+                return;
+            }
+            
+            DataPayload<Object> payload = DataPayload.builder()
+                    .withData(result)
+                    .withMessageType(MessageTypeEnum.CONTROL_COMMAND) // 设置枚举类型为 EVENT
+                    .build();
             
             // 处理命令结果
-            handleResult(result, MessageTypeEnum.CONTROL_COMMAND);
+            handleResult(payload);
         } catch (Exception e) {
             log.error("Error executing identify: {}", e.getMessage(), e);
             handleExecError(identify, e);
@@ -58,14 +67,19 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
         log.info("Device {} Reporting property", this.getDevice().code());
         try {
             // 子类实现上报属性的具体业务逻辑
-            Object result = doReportProperty();
+            Map<String, Object> result = doReportProperty();
             
-            if (Objects.isNull(result)) {
+            if (result.isEmpty()) {
                 return;
             }
             
+            DataPayload<Object> payload = DataPayload.builder()
+                    .withData(result)
+                    .withMessageType(MessageTypeEnum.PROPERTY) // 设置枚举类型为 EVENT
+                    .build();
+            
             // 处理命令结果（例如将结果上报到 MQTT 或记录日志）
-            handleResult(result, MessageTypeEnum.PROPERTY);
+            handleResult(payload);
         } catch (Exception e) {
             log.error("Error reporting device: {}", e.getMessage(), e);
         }
@@ -79,14 +93,19 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
         log.info("Device {} Reporting event", this.getDevice().code());
         try {
             // 子类实现上报属性的具体业务逻辑
-            Object result = doReportEvent();
+            Map<String, Object> result = doReportEvent();
             
-            if (Objects.isNull(result)) {
+            if(result.isEmpty()){
                 return;
             }
             
+            DataPayload<Object> payload = DataPayload.builder()
+                    .withData(result)
+                    .withMessageType(MessageTypeEnum.EVENT)
+                    .build();
+            
             // 处理命令结果（例如将结果上报到 MQTT 或记录日志）
-            handleResult(result, MessageTypeEnum.EVENT);
+            handleResult(payload);
         } catch (Exception e) {
             log.error("Error reporting device: {}", e.getMessage(), e);
         }
@@ -107,6 +126,14 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
         return cachedStatus;
     }
     
+    public void setDevice(Device device) {
+        deviceThreadLocal.set(device);
+    }
+    
+    public Device getDevice() {
+        return deviceThreadLocal.get();
+    }
+    
     /**
      * 获取设备状态的具体业务逻辑（由子类实现）
      *
@@ -117,20 +144,20 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
     /**
      * 上报事件的具体实现（由子类实现）
      */
-    public abstract Object doReportEvent();
-    
-    public Device getDevice() {
-        return deviceThreadLocal.get();
-    }
+    public abstract Map<String, Object> doReportEvent();
     
     /**
      * 上报属性的具体实现（由子类实现）
      */
-    public abstract Object doReportProperty();
+    public abstract Map<String, Object> doReportProperty();
     
-    public void setDevice(Device device) {
-        deviceThreadLocal.set(device);
-    }
+    /**
+     * 执行控制命令的具体逻辑（由子类实现）
+     *
+     * @param params 参数
+     * @return 执行结果
+     */
+    public abstract Map<String, Object> doExec(String identify, Map<String, Object> params);
     
     /**
      * 校验执行命令时的参数
@@ -150,17 +177,11 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
         log.info("参数校验结束！！！");
     }
     
-    /**
-     * 执行控制命令的具体逻辑（由子类实现）
-     *
-     * @param params 参数
-     * @return 执行结果
-     */
-    public abstract Object executeControlCommand(String identify, Map<String, Object> params);
-    
-    private void handleResult(Object result, MessageTypeEnum messageTypeEnum) {
-        log.info("handle result：{}, messageTypeEnum:{}", result, messageTypeEnum);
-        mqttMessageSenderHandler.publish("/topic", StrUtil.toString(result), messageTypeEnum);
+  
+    private void handleResult(DataPayload<Object> payload) {
+        log.info("handle result：{}", payload);
+        // todo: 根据不同类型，选择不同topic进行发送，目前默认是 /topic 测试
+        mqttMessageSenderHandler.publish("/topic", StrUtil.toString(payload.getData()), payload.getMessageTypeEnum());
     }
     
     /**
@@ -180,16 +201,6 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
      * @return 唯一标识符
      */
     public abstract String getIdentify();
-    
-    /**
-     * 处理命令执行后的结果
-     *
-     * @param identify 命令
-     * @param result   执行结果
-     */
-    public void handleCommandResult(String identify, Object result) {
-        log.info("处理命令执行后的结果");
-    }
     
     /**
      * 提供默认的 getTag() 实现，返回当前类的简单名称

@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module.logic.manager;
+package com.iothub.message.broker.module.core.manager;
 
 import com.iothub.message.broker.module.domain.Device;
 import jakarta.annotation.PostConstruct;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 @Component
@@ -55,7 +54,7 @@ public class DeviceManager {
         reloadDevices();
         
         // 定期重新加载设备信息
-        reloadService.scheduleAtFixedRate(this::reloadDevices, RELOAD_INTERVAL_SECONDS, RELOAD_INTERVAL_SECONDS, TimeUnit.SECONDS);
+//        reloadService.scheduleAtFixedRate(this::reloadDevices, RELOAD_INTERVAL_SECONDS, RELOAD_INTERVAL_SECONDS, TimeUnit.SECONDS);
     }
     
     // 定期重新加载设备信息

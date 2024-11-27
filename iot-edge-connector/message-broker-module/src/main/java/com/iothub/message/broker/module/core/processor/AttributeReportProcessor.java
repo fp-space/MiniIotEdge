@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module.logic.processor;
+package com.iothub.message.broker.module.core.processor;
 
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
 import lombok.extern.slf4j.Slf4j;

@@ -1,12 +1,12 @@
-package com.iothub.message.broker.module.logic.processor;
+package com.iothub.message.broker.module.core.processor;
 
 import com.google.gson.Gson;
-import com.iothub.message.broker.module.logic.connector.DefaultDeviceConnector;
+import com.iothub.message.broker.module.core.connector.DefaultDeviceConnector;
 import com.iothub.message.broker.module.domain.Device;
 import com.iothub.message.broker.module.domain.MessageRequest;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
-import com.iothub.message.broker.module.logic.manager.DeviceConnectorManager;
-import com.iothub.message.broker.module.logic.manager.DeviceRegistry;
+import com.iothub.message.broker.module.core.manager.DeviceConnectorManager;
+import com.iothub.message.broker.module.core.manager.DeviceRegistry;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module.logic.handler;
+package com.iothub.message.broker.module.core.handler;
 
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
 import jakarta.annotation.Resource;
@@ -26,7 +26,7 @@ public class MqttMessageSenderHandler {
     
     @Resource
     private Mqttv5PahoMessageHandler mqttv5PahoMessageHandler;
-    
+
     /**
      * 发送带有指定消息类型的 MQTT 消息
      *
@@ -65,9 +65,15 @@ public class MqttMessageSenderHandler {
      * @param topic   主题
      */
     private void sendUsingMessageHandler(Message<MqttMessage> message, String topic) {
+        
         try {
             if (!mqttv5PahoMessageHandler.isRunning()) {
-                return;
+                synchronized (this) {
+                    if (!mqttv5PahoMessageHandler.isRunning()) {
+                        mqttv5PahoMessageHandler.start();  // 启动 MQTT 客户端
+                        log.info("Started MQTT client.");
+                    }
+                }
             }
             
             mqttv5PahoMessageHandler.handleMessage(message);
