@@ -1,46 +1,41 @@
 package com.iothub.message.broker.module.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum MessageTypeEnum {
     
     // 请求与响应类型
-    REQUEST("请求", "request", MessageSourceType.UNKNOWN),       // 通用请求
-    RESPONSE("响应", "response", MessageSourceType.UNKNOWN),    // 通用响应
+    REQUEST("请求", "request"),
+    RESPONSE("响应", "response"),
     
-    // 控制类消息（仅云端下发）
-    CONTROL_COMMAND("控制命令", "control_command", MessageSourceType.CLOUD), // 云端下发控制命令
-    CONTROL_ACKNOWLEDGEMENT("控制确认", "control_acknowledgement", MessageSourceType.EDGE), // 边端确认控制
+    // 命令请求
+    COMMAND_INVOCATION("命令请求", "invocation"),
+    
+    // 命令确认响应
+    COMMAND_ACKNOWLEDGMENT("命令确认", "acknowledgment"),
     
     // 事件类消息
-    EVENT("事件", "event", MessageSourceType.EDGE),          // 通用事件
-    NOTIFICATION("通知", "notification", MessageSourceType.CLOUD), // 云端发起的通知
+    EVENT("事件", "event"),          // 通用事件
+    
+    NOTIFICATION("通知", "notification"),
     
     // 属性类消息
-    PROPERTY("属性", "property", MessageSourceType.EDGE),  // 属性更新
+    PROPERTY("属性", "property"),
     
     // 心跳类消息
-    HEARTBEAT("心跳", "heartbeat", MessageSourceType.UNKNOWN), // 心跳消息
-    HEARTBEAT_REQUEST("心跳请求", "heartbeat_request", MessageSourceType.EDGE),  // 边端请求
-    HEARTBEAT_RESPONSE("心跳响应", "heartbeat_response", MessageSourceType.CLOUD), // 云端响应
+    HEARTBEAT("心跳", "heartbeat_request"),
     
     // 自定义类型
-    CUSTOM("自定义", "custom", MessageSourceType.UNKNOWN),
+    CUSTOM("自定义", "custom"),
     
     // 不支持的类型
-    UNSUPPORTED("不支持的类型", "unsupported", MessageSourceType.UNKNOWN);
+    UNSUPPORTED("不支持的类型", "unsupported");
     
     private final String description;
     private final String type;
-    private final MessageSourceType messageSourceType;
-    
-    // 构造函数
-    MessageTypeEnum(String description, String type, MessageSourceType messageSourceType) {
-        this.description = description;
-        this.type = type;
-        this.messageSourceType = messageSourceType;
-    }
     
     /**
      * 根据传入的字符串类型匹配对应的 MessageType

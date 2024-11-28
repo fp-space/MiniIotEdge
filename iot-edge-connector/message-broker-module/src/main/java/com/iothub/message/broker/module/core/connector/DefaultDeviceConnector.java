@@ -48,7 +48,7 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
             
             DataPayload<Object> payload = DataPayload.builder()
                     .withData(result)
-                    .withMessageType(MessageTypeEnum.CONTROL_COMMAND) // 设置枚举类型为 EVENT
+                    .withMessageType(MessageTypeEnum.COMMAND_ACKNOWLEDGMENT)
                     .build();
             
             // 处理命令结果

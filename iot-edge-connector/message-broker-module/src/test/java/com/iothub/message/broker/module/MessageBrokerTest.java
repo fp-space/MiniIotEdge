@@ -34,7 +34,7 @@ public class MessageBrokerTest {
                 }
                 """;
         String topic = "/topic";
-        mqttMessageSenderHandler.publish(topic, content, MessageTypeEnum.CONTROL_COMMAND);
+        mqttMessageSenderHandler.publish(topic, content, MessageTypeEnum.COMMAND_INVOCATION);
     }
 }
 

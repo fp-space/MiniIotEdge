@@ -1,7 +1,8 @@
-package com.iothub.message.broker.module.core.processor;
+package com.iothub.message.broker.module.core.processor.edge;
 
 import com.google.gson.Gson;
 import com.iothub.message.broker.module.core.connector.DefaultDeviceConnector;
+import com.iothub.message.broker.module.core.processor.IotMessageProcessor;
 import com.iothub.message.broker.module.domain.Device;
 import com.iothub.message.broker.module.domain.MessageRequest;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
 
 @Component
 @Slf4j
-public class ControlCommandProcessor implements IotMessageProcessor {
+public class CommandInvocationProcessor  implements IotMessageProcessor {
     
     private static final String TOPIC_REGEX = "^/[^/]+/([^/]+)$";
     @Resource
@@ -101,6 +102,6 @@ public class ControlCommandProcessor implements IotMessageProcessor {
     
     @Override
     public MessageTypeEnum getMessageType() {
-        return MessageTypeEnum.CONTROL_COMMAND;
+        return MessageTypeEnum.COMMAND_INVOCATION;
     }
 }
