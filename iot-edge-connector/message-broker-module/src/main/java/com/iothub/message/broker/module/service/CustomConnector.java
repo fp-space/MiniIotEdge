@@ -1,7 +1,7 @@
 package com.iothub.message.broker.module.service;
 
 import com.iothub.message.broker.module.domain.DeviceStatus;
-import com.iothub.message.broker.module.core.connector.DefaultDeviceConnector;
+import com.iothub.message.broker.module.core.handler.edge.connector.DefaultDeviceConnector;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module.core.manager;
+package com.iothub.message.broker.module.core.handler.edge.manager;
 
 import com.iothub.message.broker.module.domain.Device;
 import org.springframework.stereotype.Component;

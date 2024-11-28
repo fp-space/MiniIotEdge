@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module.core.connector;
+package com.iothub.message.broker.module.core.handler.edge.connector;
 
 import com.iothub.message.broker.module.domain.DeviceStatus;
 import com.iothub.message.broker.module.domain.MessageRequest;

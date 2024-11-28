@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module.config;
+package com.iothub.message.broker.module.core.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;

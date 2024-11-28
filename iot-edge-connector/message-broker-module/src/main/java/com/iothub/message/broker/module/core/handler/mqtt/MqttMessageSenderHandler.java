@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module.core.handler;
+package com.iothub.message.broker.module.core.handler.mqtt;
 
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
 import jakarta.annotation.Resource;

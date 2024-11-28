@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module.config;
+package com.iothub.message.broker.module.core.config;
 
 import com.iothub.message.broker.module.core.listener.CustomMqttCallback;
 import jakarta.annotation.Resource;

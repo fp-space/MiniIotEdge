@@ -1,13 +1,13 @@
-package com.iothub.message.broker.module.core.processor.edge;
+package com.iothub.message.broker.module.core.handler.edge.processor;
 
 import com.google.gson.Gson;
-import com.iothub.message.broker.module.core.connector.DefaultDeviceConnector;
-import com.iothub.message.broker.module.core.processor.IotMessageProcessor;
+import com.iothub.message.broker.module.core.handler.edge.connector.DefaultDeviceConnector;
+import com.iothub.message.broker.module.core.handler.interfaces.IotMessageProcessor;
 import com.iothub.message.broker.module.domain.Device;
 import com.iothub.message.broker.module.domain.MessageRequest;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
-import com.iothub.message.broker.module.core.manager.DeviceConnectorManager;
-import com.iothub.message.broker.module.core.manager.DeviceRegistry;
+import com.iothub.message.broker.module.core.handler.edge.manager.DeviceConnectorManager;
+import com.iothub.message.broker.module.core.handler.edge.manager.DeviceRegistry;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.iothub.message.broker.module.core.connector;
+package com.iothub.message.broker.module.core.handler.edge.connector;
 
 import cn.hutool.core.util.StrUtil;
 import com.iothub.message.broker.module.domain.DataPayload;
@@ -6,7 +6,7 @@ import com.iothub.message.broker.module.domain.Device;
 import com.iothub.message.broker.module.domain.DeviceStatus;
 import com.iothub.message.broker.module.domain.MessageRequest;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
-import com.iothub.message.broker.module.core.handler.MqttMessageSenderHandler;
+import com.iothub.message.broker.module.core.handler.mqtt.MqttMessageSenderHandler;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 

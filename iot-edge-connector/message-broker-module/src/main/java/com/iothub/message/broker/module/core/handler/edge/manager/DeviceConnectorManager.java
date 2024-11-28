@@ -1,6 +1,6 @@
-package com.iothub.message.broker.module.core.manager;
+package com.iothub.message.broker.module.core.handler.edge.manager;
 
-import com.iothub.message.broker.module.core.connector.DefaultDeviceConnector;
+import com.iothub.message.broker.module.core.handler.edge.connector.DefaultDeviceConnector;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class DeviceConnectorManager {
         
         if (!identifyConnectorMap.containsKey(identify)) {
             log.error("No connector found for identify: {}", identify);
-            return null;  // 或者抛出自定义异常
+            return null;
         }
         
         // 直接通过 beanName 获取连接器实例

@@ -1,6 +1,6 @@
-package com.iothub.message.broker.module.core.manager;
+package com.iothub.message.broker.module.core.handler.edge.manager;
 
-import com.iothub.message.broker.module.core.connector.DefaultDeviceConnector;
+import com.iothub.message.broker.module.core.handler.edge.connector.DefaultDeviceConnector;
 import com.iothub.message.broker.module.domain.Device;
 import com.iothub.message.broker.module.utils.MqttUtil;
 import jakarta.annotation.PostConstruct;

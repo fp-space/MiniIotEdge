@@ -1,6 +1,6 @@
-package com.iothub.message.broker.module.core.processor.cloud;
+package com.iothub.message.broker.module.core.handler.cloud.processor;
 
-import com.iothub.message.broker.module.core.processor.IotMessageProcessor;
+import com.iothub.message.broker.module.core.handler.interfaces.IotMessageProcessor;
 import com.iothub.message.broker.module.enums.MessageTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
