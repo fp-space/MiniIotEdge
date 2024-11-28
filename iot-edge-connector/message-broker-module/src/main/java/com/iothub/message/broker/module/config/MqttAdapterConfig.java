@@ -1,10 +1,10 @@
 package com.iothub.message.broker.module.config;
 
+import com.iothub.message.broker.module.core.listener.CustomMqttCallback;
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.mqttv5.client.*;
-import org.eclipse.paho.mqttv5.common.MqttException;
-import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +19,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.converter.SmartMessageConverter;
 import org.springframework.messaging.converter.StringMessageConverter;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.UUID;
 
 /**
  * 配置 MQTT 适配器，用于接收和发送消息
@@ -30,11 +29,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @EnableConfigurationProperties(MqttConfigProperties.class)
 public class MqttAdapterConfig {
     
-    private final MqttConfigProperties mqttConfigProperties;
-    
-    public MqttAdapterConfig(MqttConfigProperties mqttConfigProperties) {
-        this.mqttConfigProperties = mqttConfigProperties;
-    }
+    @Resource
+    private MqttConfigProperties mqttConfigProperties;
     
     /**
      * 配置 MQTT 连接选项
@@ -49,9 +45,13 @@ public class MqttAdapterConfig {
         options.setKeepAliveInterval(600);  // 保持连接
         options.setUserName(mqttConfigProperties.username());
         options.setPassword(mqttConfigProperties.password().getBytes());
-//        options.setCleanStart(true);  // 保持会话
+        options.setCleanStart(true);  // 保持会话
         options.setAutomaticReconnect(true);  // 启用自动重连
         return options;
+    }
+    
+    private String getClientId(String tag) {
+        return tag + "-" + mqttConfigProperties.clientId() + "-" + UUID.randomUUID();
     }
     
     /**
@@ -59,98 +59,33 @@ public class MqttAdapterConfig {
      *
      * @param mqttConnectionOptions MQTT 连接选项
      * @return MqttClient 客户端实例
-     * @throws MqttException MQTT 异常
      */
+    @SneakyThrows
     @Bean
-    public MqttAsyncClient mqttAsyncClient(MqttConnectionOptions mqttConnectionOptions) throws MqttException {
-        String clientId = mqttConfigProperties.clientId() + "-" + System.currentTimeMillis();
+    public MqttAsyncClient mqttAsyncClient(MqttConnectionOptions mqttConnectionOptions) {
+        String clientId = this.getClientId("Iot");
         String brokerUrl = mqttConfigProperties.brokerUrl();
-        
+
         // 创建 MQTT 客户端实例
         MqttAsyncClient client = new MqttAsyncClient(brokerUrl, clientId);
-        client.setManualAcks(false);
-        
-        // 使用 AtomicBoolean 标记是否正在重连，防止多次重连
-        AtomicBoolean reconnecting = new AtomicBoolean(false);
-        
+
         // 设置回调处理
-        client.setCallback(new MqttCallback() {
-            @SneakyThrows
-            @Override
-            public void disconnected(MqttDisconnectResponse mqttDisconnectResponse) {
-                // 处理连接丢失，自动重连
-                log.error("MQTT连接丢失，正在重连...");
-                
-                // 如果没有在进行重连，才启动重连逻辑
-                if (reconnecting.compareAndSet(false, true)) {
-                    reconnect(client, mqttConnectionOptions, reconnecting);
-                }
-            }
-            
-            @Override
-            public void mqttErrorOccurred(MqttException e) {
-                log.error("MQTT错误: {}", e.getMessage());
-            }
-            
-            @Override
-            public void messageArrived(String topic, org.eclipse.paho.mqttv5.common.MqttMessage message) {
-                // 处理消息
-            }
-            
-            @Override
-            public void deliveryComplete(IMqttToken iMqttToken) {
-                // 消息发送完成后的处理
-            }
-            
-            @Override
-            public void connectComplete(boolean b, String s) {
-                // 连接成功后的处理
-                log.info("MQTT连接完成: {}", s);
-            }
-            
-            @Override
-            public void authPacketArrived(int i, MqttProperties mqttProperties) {
-                // 认证信息包到达时的处理
-            }
-        });
-        
+        client.setCallback(new CustomMqttCallback(client, mqttConnectionOptions));
+
         client.connect(mqttConnectionOptions);
         return client;
     }
     
-    // 自动重连机制
-    private synchronized void reconnect(MqttAsyncClient client, MqttConnectionOptions options, AtomicBoolean reconnecting) {
-        try {
-            if (!client.isConnected()) {
-                log.info("尝试重新连接 MQTT...");
-                client.setClientId(mqttConfigProperties.clientId() + "-" + System.currentTimeMillis());
-                client.connect(options);
-                log.info("MQTT连接成功");
-            }
-        } catch (MqttException e) {
-            log.error("MQTT重新连接失败，等待5秒后重试...");
-            try {
-                TimeUnit.SECONDS.sleep(5);  // 等待一段时间后重试
-                reconnect(client, options, reconnecting);  // 递归重试
-            } catch (InterruptedException interruptedException) {
-                log.error("重试时发生中断异常: {}", interruptedException.getMessage());
-            }
-        } finally {
-            // 重连完成后将 reconnecting 标志恢复为 false
-            reconnecting.set(false);
-        }
-    }
     
     /**
      * 配置 Mqttv5 客户端管理器
      *
-     * @param mqttAsyncClient       MQTT 客户端
      * @param mqttConnectionOptions 连接选项
      * @return Mqttv5ClientManager 管理器实例
      */
     @Bean
-    public Mqttv5ClientManager mqttv5ClientManager(MqttAsyncClient mqttAsyncClient, MqttConnectionOptions mqttConnectionOptions) {
-        Mqttv5ClientManager mqttv5ClientManager = new Mqttv5ClientManager(mqttConnectionOptions, mqttAsyncClient.getClientId());
+    public Mqttv5ClientManager mqttv5ClientManager(MqttConnectionOptions mqttConnectionOptions) {
+        Mqttv5ClientManager mqttv5ClientManager = new Mqttv5ClientManager(mqttConnectionOptions, this.getClientId("IotEdge"));
         mqttv5ClientManager.start();
         return mqttv5ClientManager;
     }
@@ -166,7 +101,7 @@ public class MqttAdapterConfig {
         String[] subTopicArr = mqttConfigProperties.subscriptions().toArray(new String[0]);
         
         Mqttv5PahoMessageDrivenChannelAdapter adapter = new Mqttv5PahoMessageDrivenChannelAdapter(
-                mqttConnectionOptions, mqttConfigProperties.clientId(), subTopicArr);
+                mqttConnectionOptions, this.getClientId("In"), subTopicArr);
         
         // 设置 QoS 和完成超时
         adapter.setQos(mqttConfigProperties.qos() != null ? mqttConfigProperties.qos() : 1);
@@ -207,7 +142,8 @@ public class MqttAdapterConfig {
      */
     @Bean
     public Mqttv5PahoMessageHandler mqttv5PahoMessageHandler(Mqttv5ClientManager mqttv5ClientManager) {
-        String clientId = "mqttOutbound-" + mqttConfigProperties.clientId() + "-" + System.currentTimeMillis();
+        // 使用 UUID 生成唯一的 clientId
+        String clientId = this.getClientId("Out");
         log.info("MQTT消息处理器（生产者）clientId:{}", clientId);
         
         // 创建消息发送处理器
@@ -219,4 +155,5 @@ public class MqttAdapterConfig {
         
         return messageHandler;
     }
+
 }
