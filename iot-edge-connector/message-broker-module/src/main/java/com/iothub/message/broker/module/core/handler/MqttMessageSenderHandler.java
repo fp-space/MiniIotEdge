@@ -65,17 +65,7 @@ public class MqttMessageSenderHandler {
      * @param topic   主题
      */
     private void sendUsingMessageHandler(Message<MqttMessage> message, String topic) {
-        
         try {
-            if (!mqttv5PahoMessageHandler.isRunning()) {
-                synchronized (this) {
-                    if (!mqttv5PahoMessageHandler.isRunning()) {
-                        mqttv5PahoMessageHandler.start();  // 启动 MQTT 客户端
-                        log.info("Started MQTT client.");
-                    }
-                }
-            }
-            
             mqttv5PahoMessageHandler.handleMessage(message);
             log.info("Successfully sent message to topic: {}, message: {}", topic, message);
         } catch (Exception e) {

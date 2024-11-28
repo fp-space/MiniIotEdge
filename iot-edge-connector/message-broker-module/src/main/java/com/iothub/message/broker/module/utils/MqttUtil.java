@@ -1,13 +1,14 @@
 package com.iothub.message.broker.module.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.paho.mqttv5.client.MqttAsyncClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.integration.mqtt.outbound.Mqttv5PahoMessageHandler;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
+@DependsOn("mqttv5PahoMessageHandler")
 public class MqttUtil {
     
     

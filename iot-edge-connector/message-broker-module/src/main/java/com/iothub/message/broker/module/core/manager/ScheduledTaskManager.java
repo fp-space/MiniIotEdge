@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.concurrent.*;
 
 @Slf4j
 @Component
+@DependsOn("mqttUtil")
 public class ScheduledTaskManager {
     
     private static final int TASK_TIMEOUT = 30; // 每个任务的超时时间（秒）
@@ -49,18 +51,34 @@ public class ScheduledTaskManager {
     
     @PostConstruct
     public void init() {
+        
+        waitForMqttClientConnection();
+        
         // 延迟启动10秒钟后执行首次任务
         scheduler.scheduleWithFixedDelay(this::processPropertyReports, 0, PROPERTY_REPORT_INTERVAL, TimeUnit.MINUTES);
         scheduler.scheduleWithFixedDelay(this::processEventReports, 0, EVENT_REPORT_INTERVAL, TimeUnit.SECONDS);
         log.info("Scheduled tasks have been successfully initialized and will start after a delay of 10 seconds.");
     }
     
+    private void waitForMqttClientConnection() {
+        // 无限循环直到 MQTT 客户端连接成功
+        while (!MqttUtil.isMqttClientAlive()) {
+            log.info("MQTT client is not alive. Waiting for the client to connect...");
+            try {
+                // 每隔5秒检查一次，避免频繁检查带来的性能负担
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // 恢复中断状态
+                log.error("Thread interrupted while waiting for MQTT client connection", e);
+            }
+        }
+        
+        // 一旦连接成功，打印日志并继续执行任务
+        log.info("MQTT client connected successfully. Starting scheduled tasks.");
+    }
+    
     // 处理设备的属性报告（每5分钟执行一次）
     private void processPropertyReports() {
-        
-        if(!MqttUtil.isMqttClientAlive()){
-            return;
-        }
         
         try {
             Map<String, Device> devicesMap = deviceRegistry.getAllDeviceMap();
@@ -93,10 +111,6 @@ public class ScheduledTaskManager {
     
     // 处理设备的事件报告（每10分钟执行一次）
     private void processEventReports() {
-        
-        if(!MqttUtil.isMqttClientAlive()){
-            return;
-        }
         
         try {
             Map<String, Device> devicesMap = deviceRegistry.getAllDeviceMap();
