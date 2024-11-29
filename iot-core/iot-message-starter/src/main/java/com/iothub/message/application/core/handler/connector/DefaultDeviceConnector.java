@@ -9,7 +9,6 @@ import com.iothub.message.application.domain.MessageRequest;
 import com.iothub.message.application.enums.MessageTypeEnum;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Lazy;
 
 import java.util.Map;
@@ -203,7 +202,9 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
      *
      * @return 唯一标识符
      */
-    public abstract String getIdentify();
+    public String getIdentify(){
+        return this.getDevice().model();
+    }
     
     /**
      * 提供默认的 getTag() 实现，返回当前类的简单名称

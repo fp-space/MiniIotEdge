@@ -4,14 +4,6 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- 父 POM 配置 -->
-    <parent>
-        <groupId>com.iothub.application</groupId>
-        <artifactId>iot-core</artifactId>
-        <version>v0.0.1-alpha</version>
-        <relativePath/>
-    </parent>
-
     <properties>
         <project.version>v0.0.1-alpha</project.version>
     </properties>
@@ -19,6 +11,10 @@
 
     <artifactId>iot-cloud-platform</artifactId>
     <version>v0.0.1-alpha</version>
+
+    <modules>
+        <module>iot-cloud-connector</module>
+    </modules>
 
     <!-- 子模块可以覆盖某些设置（如果有需要），否则继承父 POM -->
     <dependencies>

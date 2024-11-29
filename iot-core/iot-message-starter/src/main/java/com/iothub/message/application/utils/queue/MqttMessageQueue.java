@@ -1,6 +1,5 @@
 package com.iothub.message.application.utils.queue;
 
-import com.iothub.message.application.utils.queue.LocalBufferQueue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -24,31 +23,10 @@ public class MqttMessageQueue<T> {
         }
     }
     
+    /**
+     * 获取元素
+     */
     public T poll(long timeout, TimeUnit unit) throws InterruptedException {
         return queue.poll(timeout, unit);
-    }
-    
-    /**
-     * 获取并处理消息
-     */
-    public void processMessages() {
-        new Thread(() -> {
-            while (true) {
-                try {
-                    T element = queue.get();
-                    log.info("Processing element: {}", element);
-                    
-                    handle(element);
-                    
-                    // 这里加入具体的消息处理逻辑
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    log.error("Element processing interrupted", e);
-                }
-            }
-        }).start();
-    }
-    
-    public void handle(T element) {
     }
 }

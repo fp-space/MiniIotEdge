@@ -1,9 +1,8 @@
 package com.iothub.message.application.core.config;
 
 import com.iothub.message.application.core.handler.connector.DefaultDeviceConnector ;
-import com.iothub.message.application.core.handler.interfaces.IotMessageProcessor;
+import com.iothub.message.application.core.handler.connector.IotMessageProcessor;
 import com.iothub.message.application.enums.MessageTypeEnum;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
