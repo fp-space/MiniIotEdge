@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- 父模块信息 -->
-    <groupId>com.iothhub.parent</groupId>
+    <groupId>com.iothub.parent</groupId>
     <artifactId>iot-parent</artifactId>
     <version>v0.0.1-alpha</version>
     <packaging>pom</packaging>
@@ -13,16 +13,16 @@
     <!-- 全局属性配置 -->
     <properties>
         <project.version>v0.0.1-alpha</project.version>
-        <java.version>21</java.version> <!-- 全局设置 Java 版本 -->
-        <maven.compiler.source>21</maven.compiler.source> <!-- 编译 Java 版本 -->
-        <maven.compiler.target>21</maven.compiler.target> <!-- 编译 Java 版本 -->
-        <maven.compiler.version>3.8.1</maven.compiler.version> <!-- 编译 Java 版本 -->
-        <spring-boot.version>3.3.5</spring-boot.version> <!-- 编译 Java 版本 -->
-        <spring.version>6.3.5</spring.version> <!-- 编译 Java 版本 -->
-        <mqtt.version>1.2.5</mqtt.version> <!-- 编译 Java 版本 -->
-        <hutool.version>5.8.25</hutool.version> <!-- 编译 Java 版本 -->
-        <lombok.version>1.18.32</lombok.version> <!-- 编译 Java 版本 -->
-        <junit.version>4.13.1</junit.version> <!-- 编译 Java 版本 -->
+        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source> 
+        <maven.compiler.target>21</maven.compiler.target> 
+        <maven.compiler.version>3.8.1</maven.compiler.version> 
+        <spring-boot.version>3.3.5</spring-boot.version> 
+        <spring.version>6.3.5</spring.version> 
+        <mqtt.version>1.2.5</mqtt.version> 
+        <hutool.version>5.8.25</hutool.version> 
+        <lombok.version>1.18.32</lombok.version> 
+        <junit.version>4.13.1</junit.version> 
     </properties>
 
     <!-- 全局依赖管理 -->
@@ -35,15 +35,9 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-parent</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-autoconfigure</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-integration</artifactId>
@@ -127,4 +121,15 @@
         </pluginManagement>
     </build>
 
+
+    <repositories>
+        <repository>
+            <id>local-repo</id>
+            <url>file://${user.home}/.m2/repository</url>  <!-- 本地仓库 -->
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>  <!-- 远程仓库 -->
+        </repository>
+    </repositories>
 </project>

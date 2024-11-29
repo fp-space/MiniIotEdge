@@ -4,49 +4,20 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- 父 POM 配置 -->
-    <parent>
-        <groupId>com.iothhub.parent</groupId>
-        <artifactId>iot-parent</artifactId>
-        <version>v0.0.1-alpha</version>
-        <relativePath/>
-    </parent>
-
     <properties>
         <project.version>v0.0.1-alpha</project.version>
     </properties>
 
-    <groupId>com.iothub.core</groupId>
+    <groupId>com.iothub.application</groupId>
     <artifactId>iot-core</artifactId>
     <version>v0.0.1-alpha</version>
 
     <packaging>pom</packaging>
-
     <modules>
         <module>iot-core-api</module>
         <module>iot-core-common</module>
-        <module>iot-core-service</module>
         <module>iot-core-utils</module>
+        <module>iot-message-starter</module>
     </modules>
-
-    <!-- 子模块可以覆盖某些设置（如果有需要），否则继承父 POM -->
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.10.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-test</artifactId>
-            <version>3.3.5</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
 </project>

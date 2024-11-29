@@ -1,0 +1,19 @@
+spring:
+  mqtt:
+    broker-url: tcp://192.168.1.100:1883   # 你的MQTT代理地址
+    client-id: client123               # 客户端 ID
+    username: test           # 用户名（如果需要认证）
+    password: test           # 密码（如果需要认证）
+    connection-timeout: 10s               # Connection timeout
+    keep-alive-interval: 30s           # Keep-alive interval
+    qos: 1  # 默认 QoS 质量服务级别
+    #    input-output-channel-name: "mqttChannel"
+    subscriptions:
+      - /topic/#
+
+iot:
+  tag: edge
+  enable: true
+
+server:
+  port: 8080

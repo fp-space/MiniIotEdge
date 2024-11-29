@@ -4,10 +4,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- 父 POM 配置 -->
     <parent>
-        <groupId>com.iothub.core</groupId>
-        <artifactId>iot-core</artifactId>
+        <groupId>com.iothhub.parent</groupId>
+        <artifactId>iot-parent</artifactId>
         <version>v0.0.1-alpha</version>
         <relativePath/>
     </parent>
@@ -16,9 +15,9 @@
         <project.version>v0.0.1-alpha</project.version>
     </properties>
 
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
-    <groupId>com.iothub.core.common</groupId>
+    <groupId>com.iothub.common.application</groupId>
     <artifactId>iot-core-common</artifactId>
     <version>v0.0.1-alpha</version>
 

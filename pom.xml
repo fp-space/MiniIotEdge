@@ -12,9 +12,10 @@
 
     <!-- 子模块 -->
     <modules>
-        <module>iot-edge-connector</module>
         <module>iot-core</module>
         <module>iot-parent</module>
+        <module>iot-edge-platform</module>
+        <module>iot-cloud-platform</module>
     </modules>
 
     <!-- 全局属性配置 -->
