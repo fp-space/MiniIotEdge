@@ -4,24 +4,18 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.iothhub.parent</groupId>
-        <artifactId>iot-parent</artifactId>
-        <version>v0.0.1-alpha</version>
-        <relativePath/>
-    </parent>
-
     <properties>
         <project.version>v0.0.1-alpha</project.version>
     </properties>
 
     <packaging>pom</packaging>
-    <groupId>com.iothhub.api.application</groupId>
-    <artifactId>iot-core-api</artifactId>
+
+    <groupId>com.iothub.cloud.platform</groupId>
+    <artifactId>iot-cloud-platform</artifactId>
     <version>v0.0.1-alpha</version>
 
-    <!-- 子模块可以覆盖某些设置（如果有需要），否则继承父 POM -->
-    <dependencies>
-    </dependencies>
+    <modules>
+        <module>iot-cloud-connector</module>
+    </modules>
 
 </project>

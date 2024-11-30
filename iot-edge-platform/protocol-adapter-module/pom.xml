@@ -4,8 +4,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- 父 POM 配置 -->
     <parent>
-        <groupId>com.iothhub.parent</groupId>
+        <groupId>com.iothub.parent</groupId>
         <artifactId>iot-parent</artifactId>
         <version>v0.0.1-alpha</version>
         <relativePath/>
@@ -15,13 +16,16 @@
         <project.version>v0.0.1-alpha</project.version>
     </properties>
 
-    <packaging>pom</packaging>
-    <groupId>com.iothhub.api.application</groupId>
-    <artifactId>iot-core-api</artifactId>
-    <version>v0.0.1-alpha</version>
+    <groupId>com.iothub.protocol.application</groupId>
+    <artifactId>protocol-adapter-module</artifactId>
+    <version>${project.version}</version>
 
     <!-- 子模块可以覆盖某些设置（如果有需要），否则继承父 POM -->
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
