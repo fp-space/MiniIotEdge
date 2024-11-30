@@ -202,9 +202,7 @@ public abstract class DefaultDeviceConnector implements DeviceConnector {
      *
      * @return 唯一标识符
      */
-    public String getIdentify(){
-        return this.getDevice().model();
-    }
+    public abstract String getIdentify();
     
     /**
      * 提供默认的 getTag() 实现，返回当前类的简单名称

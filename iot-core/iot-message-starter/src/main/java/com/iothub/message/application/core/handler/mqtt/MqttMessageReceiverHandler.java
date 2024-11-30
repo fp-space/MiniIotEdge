@@ -1,17 +1,22 @@
 package com.iothub.message.application.core.handler.mqtt;
 
+import cn.hutool.core.util.StrUtil;
+import com.iothub.message.application.core.config.IotMessageConfigProperties;
 import com.iothub.message.application.core.handler.connector.IotMessageProcessor;
+import com.iothub.message.application.enums.MessageSourceType;
 import com.iothub.message.application.enums.MessageTypeEnum;
 import com.iothub.message.application.utils.TimerUtil;
 import com.iothub.message.application.utils.queue.MqttMessageQueue;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -23,13 +28,17 @@ public class MqttMessageReceiverHandler {
     private static final int TIMEOUT = 10; // 超时时间10秒
     private static final int PROCESS_TIMEOUT = 5; // 消息处理的超时时间5秒
     
-    private final Map<MessageTypeEnum, IotMessageProcessor> processors;
-    private final MqttMessageQueue<Message<?>> messageQueue;
+
     private final ExecutorService virtualThreadPool; // 虚拟线程池，用于处理消息
     
-    public MqttMessageReceiverHandler(Map<MessageTypeEnum, IotMessageProcessor> processors, MqttMessageQueue<Message<?>> messageQueue) {
-        this.processors = processors;
-        this.messageQueue = messageQueue;
+    @Resource
+    private Map<MessageTypeEnum, IotMessageProcessor> processors;
+    @Resource
+    private MqttMessageQueue<Message<?>> messageQueue;
+    @Resource
+    private IotMessageConfigProperties iotMessageConfigProperties;
+    
+    public MqttMessageReceiverHandler() {
         this.virtualThreadPool = Executors.newVirtualThreadPerTaskExecutor(); // 创建虚拟线程池
     }
     
@@ -71,6 +80,18 @@ public class MqttMessageReceiverHandler {
         String content = extractContent(message);
         String topic = extractTopic(message);
         MessageTypeEnum messageType = extractMessageType(message);
+        MessageSourceType messageSourceType = extractMessageSourceType(message);
+        
+        if(Objects.isNull(messageSourceType) || StrUtil.isEmpty(iotMessageConfigProperties.getTag())){
+            log.error("请添加标识，当前支持的标识有：{}", Arrays.stream(MessageSourceType.values()).toArray());
+            return;
+        }
+        
+        // 需要接收的标识和发送不一致 或者 未知，可能有级联消费情况
+        if(messageSourceType.getCode().equals(iotMessageConfigProperties.getTag())
+                && !messageSourceType.equals(MessageSourceType.UNKNOWN)){
+            return;
+        }
         
         if (messageType == null) {
             log.error("MessageType is missing or invalid in message.");
@@ -107,6 +128,11 @@ public class MqttMessageReceiverHandler {
     private MessageTypeEnum extractMessageType(Message<?> message) {
         String messageTypeHeader = message.getHeaders().get("MessageType", String.class);
         return MessageTypeEnum.match(messageTypeHeader);
+    }
+    
+    private MessageSourceType extractMessageSourceType(Message<?> message) {
+        String messageSourceType = message.getHeaders().get("MessageSourceType", String.class);
+        return MessageSourceType.match(messageSourceType);
     }
     
     /**

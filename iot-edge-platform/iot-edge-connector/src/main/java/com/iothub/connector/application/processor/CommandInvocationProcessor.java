@@ -29,7 +29,7 @@ public class CommandInvocationProcessor  implements IotMessageProcessor {
     @Override
     public void process(String topic, String content) {
         // 事件回复的处理逻辑
-        log.info("Processing EVENT_REPLY from Topic: {}, Content: {}", topic, content);
+        log.info("Processing COMMAND_INVOCATION from Topic: {}, Content: {}", topic, content);
         
         String deviceCode = extractDeviceCodeFromTopic(topic);
         if (deviceCode == null) {

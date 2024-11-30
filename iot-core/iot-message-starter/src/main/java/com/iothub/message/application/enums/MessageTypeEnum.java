@@ -8,8 +8,8 @@ import lombok.Getter;
 public enum MessageTypeEnum {
     
     // 请求与响应类型
-    REQUEST("请求", "request"),
-    RESPONSE("响应", "response"),
+    REQUEST_CLOUD("请求", "request"),
+    RESPONSE_EDGE("响应", "response"),
     
     // 命令请求
     COMMAND_INVOCATION("命令请求", "invocation"),

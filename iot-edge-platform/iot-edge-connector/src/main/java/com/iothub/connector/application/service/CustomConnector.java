@@ -26,7 +26,7 @@ public class CustomConnector extends DefaultDeviceConnector {
 
     @Override
     public Map<String, Object> doExec(String identify, Map<String, Object> params) {
-        return null;
+        return Map.of("key", "value");
     }
 
     @Override
@@ -36,7 +36,7 @@ public class CustomConnector extends DefaultDeviceConnector {
 
     @Override
     public String getIdentify() {
-        return super.getIdentify();
+        return "custom";
     }
     
     @Override

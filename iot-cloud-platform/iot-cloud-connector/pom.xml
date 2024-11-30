@@ -16,7 +16,7 @@
         <project.version>v0.0.1-alpha</project.version>
     </properties>
 
-    <groupId>com.iothub.connector.application</groupId>
+    <groupId>com.iothub.connector.cloud.application</groupId>
     <artifactId>iot-cloud-connector</artifactId>
     <version>v0.0.1-alpha</version>
 

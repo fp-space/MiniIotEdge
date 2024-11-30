@@ -1,12 +1,13 @@
 package com.iothub.message.application.core.handler.mqtt;
 
+import com.iothub.message.application.core.config.IotMessageConfigProperties;
+import com.iothub.message.application.enums.MessageSourceType;
 import com.iothub.message.application.enums.MessageTypeEnum;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.eclipse.paho.mqttv5.common.packet.UserProperty;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.integration.mqtt.outbound.Mqttv5PahoMessageHandler;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.integration.support.MessageBuilder;
@@ -27,6 +28,8 @@ public class MqttMessageSenderHandler {
     
     @Resource
     private Mqttv5PahoMessageHandler mqttv5PahoMessageHandler;
+    @Resource
+    private IotMessageConfigProperties iotMessageConfigProperties;
 
     /**
      * 发送带有指定消息类型的 MQTT 消息
@@ -54,8 +57,9 @@ public class MqttMessageSenderHandler {
         
         return MessageBuilder.withPayload(mqttMessage)
                 .setHeader(MqttHeaders.TOPIC, topic)
-                .setHeader("MessageType", messageType.getType())
-                .setHeader("MessageId", UUID.randomUUID().toString())
+//                .setHeader("MessageType", messageType.getType())
+//                .setHeader("MessageSourceType", MessageSourceType.match(iotMessageConfigProperties.getTag()))
+//                .setHeader("MessageId", UUID.randomUUID().toString())
                 .build();
     }
     
@@ -100,6 +104,7 @@ public class MqttMessageSenderHandler {
         Map<String, String> headers = new HashMap<>();
         headers.put("MessageType", messageType.getType());
         headers.put("MessageId", UUID.randomUUID().toString());
+        headers.put("MessageSourceType", MessageSourceType.match(iotMessageConfigProperties.getTag()).getCode());
         
         headers.forEach((key, value) -> {
             if (value != null) {

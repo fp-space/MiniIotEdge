@@ -29,7 +29,6 @@ import java.util.UUID;
 @Configuration
 @Order(1)
 @Slf4j
-@EnableConfigurationProperties(MqttConfigProperties.class)
 public class MqttAdapterConfig {
     
     @Resource
@@ -43,18 +42,18 @@ public class MqttAdapterConfig {
     @Bean
     public MqttConnectionOptions mqttConnectionOptions() {
         MqttConnectionOptions options = new MqttConnectionOptions();
-        options.setServerURIs(new String[]{mqttConfigProperties.brokerUrl()});
+        options.setServerURIs(new String[]{mqttConfigProperties.getBrokerUrl()});
         options.setConnectionTimeout(600);  // 连接超时
         options.setKeepAliveInterval(600);  // 保持连接
-        options.setUserName(mqttConfigProperties.username());
-        options.setPassword(mqttConfigProperties.password().getBytes());
+        options.setUserName(mqttConfigProperties.getUsername());
+        options.setPassword(mqttConfigProperties.getPassword().getBytes());
         options.setCleanStart(true);  // 保持会话
         options.setAutomaticReconnect(true);  // 启用自动重连
         return options;
     }
     
     private String getClientId(String tag) {
-        return tag + "-" + mqttConfigProperties.clientId() + "-" + UUID.randomUUID();
+        return tag + "-" + mqttConfigProperties.getClientId() + "-" + UUID.randomUUID();
     }
     
     /**
@@ -67,7 +66,7 @@ public class MqttAdapterConfig {
     @Bean
     public MqttAsyncClient mqttAsyncClient(MqttConnectionOptions mqttConnectionOptions) {
         String clientId = this.getClientId("Iot");
-        String brokerUrl = mqttConfigProperties.brokerUrl();
+        String brokerUrl = mqttConfigProperties.getBrokerUrl();
 
         // 创建 MQTT 客户端实例
         MqttAsyncClient client = new MqttAsyncClient(brokerUrl, clientId);
@@ -101,14 +100,14 @@ public class MqttAdapterConfig {
      */
     @Bean
     public MessageProducer inbound(MqttConnectionOptions mqttConnectionOptions) {
-        String[] subTopicArr = mqttConfigProperties.subscriptions().toArray(new String[0]);
+        String[] subTopicArr = mqttConfigProperties.getSubscriptions().toArray(new String[0]);
         
         Mqttv5PahoMessageDrivenChannelAdapter adapter = new Mqttv5PahoMessageDrivenChannelAdapter(
                 mqttConnectionOptions, this.getClientId("In"), subTopicArr);
         
         // 设置 QoS 和完成超时
-        adapter.setQos(mqttConfigProperties.qos() != null ? mqttConfigProperties.qos() : 1);
-        adapter.setCompletionTimeout(Integer.parseInt(mqttConfigProperties.connectionTimeout().replace("s", "")) * 1000L);
+        adapter.setQos(mqttConfigProperties.getQos() != null ? mqttConfigProperties.getQos() : 1);
+        adapter.setCompletionTimeout(Integer.parseInt(mqttConfigProperties.getConnectionTimeout().replace("s", "")) * 1000L);
         
         // 设置消息转换器
         SmartMessageConverter smartMessageConverter = new StringMessageConverter();
@@ -154,7 +153,7 @@ public class MqttAdapterConfig {
         messageHandler.start();
         messageHandler.setHeaderMapper(new MqttHeaderMapper());
         messageHandler.setAsync(true);  // 设置异步发送
-        messageHandler.setDefaultQos(mqttConfigProperties.qos());  // 设置默认QoS
+        messageHandler.setDefaultQos(mqttConfigProperties.getQos());  // 设置默认QoS
         
         return messageHandler;
     }

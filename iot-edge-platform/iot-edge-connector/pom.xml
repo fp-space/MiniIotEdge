@@ -83,6 +83,11 @@
             <version>v0.0.1-alpha</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>3.3.5</version>
+        </dependency>
     </dependencies>
 
     <repositories>

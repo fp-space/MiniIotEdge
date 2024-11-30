@@ -7,18 +7,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class CommandAcknowledgmentProcessor  implements IotMessageProcessor {
+public class EventProcessor implements IotMessageProcessor {
     
     @Override
     public void process(String topic, String content) {
         // 属性上报的处理逻辑
-        log.info("Processing COMMAND_ACKNOWLEDGMENT from Topic: {}, Content: {}", topic, content);
+        log.info("Processing EVENT from Topic: {}, Content: {}", topic, content);
         // 可以在这里根据内容解析属性，存储数据等
     }
     
     @Override
     public MessageTypeEnum getMessageType() {
-        return MessageTypeEnum.COMMAND_ACKNOWLEDGMENT;
+        return MessageTypeEnum.EVENT;
     }
 }
 

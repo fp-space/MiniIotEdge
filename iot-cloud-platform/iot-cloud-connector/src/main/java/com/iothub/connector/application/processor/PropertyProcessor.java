@@ -12,7 +12,7 @@ public class PropertyProcessor implements IotMessageProcessor {
     @Override
     public void process(String topic, String content) {
         // 属性上报的处理逻辑
-        log.info("Processing ATTRIBUTE_REPORT from Topic: {}, Content: {}", topic, content);
+        log.info("Processing PROPERTY from Topic: {}, Content: {}", topic, content);
         // 可以在这里根据内容解析属性，存储数据等
     }
     

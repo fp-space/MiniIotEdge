@@ -36,6 +36,20 @@ public class MessageBrokerTest {
         String topic = "/topic";
         mqttMessageSenderHandler.publish(topic, content, MessageTypeEnum.COMMAND_INVOCATION);
     }
+    
+    @Test
+    public void testCommand() {
+        String content = """
+                {
+                  "identify": "hello",
+                  "inputParams": {
+                    "a": "b"
+                  }
+                }
+                """;
+        String topic = "/topic";
+        mqttMessageSenderHandler.publish(topic, content, MessageTypeEnum.COMMAND_INVOCATION);
+    }
 }
 
 

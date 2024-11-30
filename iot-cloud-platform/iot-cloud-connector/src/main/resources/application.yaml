@@ -1,7 +1,7 @@
 spring:
   mqtt:
     broker-url: tcp://192.168.1.100:1883   # 你的MQTT代理地址
-    client-id: client123               # 客户端 ID
+    client-id: iot-cloud               # 客户端 ID
     username: test           # 用户名（如果需要认证）
     password: test           # 密码（如果需要认证）
     connection-timeout: 10s               # Connection timeout
@@ -12,8 +12,8 @@ spring:
       - /topic/#
 
 iot:
-  tag: edge
+  tag: cloud
   enable: true
 
 server:
-  port: 8080
+  port: 8081
